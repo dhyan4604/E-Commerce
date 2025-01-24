@@ -1,9 +1,9 @@
-## X-Beat | React eCommerce Web App
+## AudioLoom | React eCommerce Web App
 
-### [Demo Link](https://x-beat.netlify.app/) 🔗
+<!-- ### [Demo Link](https://x-beat.netlify.app/) 🔗 -->
 
 Audio Store eCommerce Website, built with **React JS**. <br/>
-State management using Context API.
+<!-- State management using Context API. -->
 <br/>
 
 ## Features:
@@ -31,9 +31,9 @@ State management using Context API.
 
 <br/>
 
-## Author:
+<!-- ## Author:
 
-- **Gulshan Songara** - **[Portfolio Website](https://gulshansongara.netlify.app)**, **[Linkedin](https://www.linkedin.com/in/gulshan-songara/)**
+- **Gulshan Songara** - **[Portfolio Website](https://gulshansongara.netlify.app)**, **[Linkedin](https://www.linkedin.com/in/gulshan-songara/)** -->
 
 <br/>
 
