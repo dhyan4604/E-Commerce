@@ -23,7 +23,7 @@ const Footer = () => {
             <div className="container">
                 <div className="wrapper footer_wrapper">
                     <div className="foot_about">
-                        <img src='./logo.png' alt='logo' classname="logo"></img>
+                        <img src='./logo3.png' alt='logo' classname="logo"></img>
                         {/* <h2>
                             <Link to="/">AudioLoom</Link>
                         </h2> */}
