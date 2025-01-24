@@ -5,6 +5,8 @@ import useDocTitle from '../hooks/useDocTitle';
 import cartContext from '../contexts/cart/cartContext';
 import CartItem from '../components/cart/CartItem';
 import EmptyView from '../components/common/EmptyView';
+import Checkout from './Checkout';
+import { Link } from 'react-router-dom';
 
 
 const Cart = () => {
@@ -84,11 +86,11 @@ const Cart = () => {
                                             </div>
                                             <div className="separator"></div>
                                             <div className="total_price">
-                                                <b><small>Total Price</small></b>
+                                                {/* <b><small>Total Price</small></b> */}
                                                 <b>{displayTotalAmount}</b>
                                             </div>
                                         </div>
-                                        <button type="button" className="btn checkout_btn">Checkout</button>
+                                        <Link to="Checkout" className="btn">Checkout</Link>
                                     </div>
                                 </div>
                             </div>

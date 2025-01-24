@@ -8,12 +8,14 @@ import { FiltersProvider } from './contexts/filters/filtersContext';
 
 
 
+
 const App = () => {
   return (
     <>
       <CommonProvider>
         <FiltersProvider>
           <CartProvider>
+           
             <Header />
             <RouterRoutes />
             <Footer />
