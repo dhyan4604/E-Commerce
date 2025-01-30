@@ -76,7 +76,7 @@ const Footer = () => {
                     <div className="sub_footer_wrapper">
                         <div className="foot_copyright">
                             <p>
-                                {currYear} | AudioLoom. All Rights Reserved. |
+                                {currYear} | AudioLoom. All Rights Reserved. | Dhyan Desai |
                                 {/*  <a href="https://gulshansongara.netlify.app/">Gulshan Songara</a> */}
                             </p>
                         </div>

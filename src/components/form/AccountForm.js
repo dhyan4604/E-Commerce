@@ -1,145 +1,90 @@
 import React, { useContext, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
+import axios from 'axios'; // Import axios for API calls
 import commonContext from '../../contexts/common/commonContext';
 import useForm from '../../hooks/useForm';
 import useOutsideClose from '../../hooks/useOutsideClose';
 import useScrollDisable from '../../hooks/useScrollDisable';
 
 const AccountForm = () => {
-
     const { isFormOpen, toggleForm } = useContext(commonContext);
-    const { inputValues, handleInputValues, handleFormSubmit } = useForm();
-
+    const { inputValues, handleInputValues } = useForm();
     const formRef = useRef();
 
-    useOutsideClose(formRef, () => {
-        toggleForm(false);
-    });
-
+    useOutsideClose(formRef, () => toggleForm(false));
     useScrollDisable(isFormOpen);
 
-    const [isSignupVisible, setIsSignupVisible] = useState(false);
+    const [isSignup, setIsSignup] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
 
-
-    // Signup-form visibility toggling
-    const handleIsSignupVisible = () => {
-        setIsSignupVisible(prevState => !prevState);
+    const handleToggleForm = () => {
+        setIsSignup(!isSignup);
+        setErrorMessage(''); // Clear error when switching forms
     };
 
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setErrorMessage('');
+
+        try {
+            const url = `http://localhost:5000/api/${isSignup ? 'signup' : 'login'}`;
+            const payload = isSignup
+                ? { username: inputValues.username, mail: inputValues.mail, password: inputValues.password }
+                : { mail: inputValues.mail, password: inputValues.password };
+
+            const { data } = await axios.post(url, payload);
+
+            if (data.success) {
+                alert(data.message);
+                toggleForm(false); // Close form on success
+            } else {
+                setErrorMessage(data.message);
+            }
+        } catch (error) {
+            setErrorMessage(error.response?.data?.message || 'An error occurred');
+        }
+    };
 
     return (
-        <>
-            {
-                isFormOpen && (
-                    <div className="backdrop">
-                        <div className="modal_centered">
-                            <form id="account_form" ref={formRef} onSubmit={handleFormSubmit}>
-
-                                {/*===== Form-Header =====*/}
-                                <div className="form_head">
-                                    <h2>{isSignupVisible ? 'Signup' : 'Login'}</h2>
-                                    <p>
-                                        {isSignupVisible ? 'Already have an account ?' : 'New to AudioLoom ?'}
-                                        &nbsp;&nbsp;
-                                        <button type="button" onClick={handleIsSignupVisible}>
-                                            {isSignupVisible ? 'Login' : 'Create an account'}
-                                        </button>
-                                    </p>
-                                </div>
-
-                                {/*===== Form-Body =====*/}
-                                <div className="form_body">
-                                    {
-                                        isSignupVisible && (
-                                            <div className="input_box">
-                                                <input
-                                                    type="text"
-                                                    name="username"
-                                                    className="input_field"
-                                                    value={inputValues.username || ''}
-                                                    onChange={handleInputValues}
-                                                    required
-                                                />
-                                                <label className="input_label">Username</label>
-                                            </div>
-                                        )
-                                    }
-
-                                    <div className="input_box">
-                                        <input
-                                            type="email"
-                                            name="mail"
-                                            className="input_field"
-                                            value={inputValues.mail || ''}
-                                            onChange={handleInputValues}
-                                            required
-                                        />
-                                        <label className="input_label">Email</label>
-                                    </div>
-
-                                    <div className="input_box">
-                                        <input
-                                            type="password"
-                                            name="password"
-                                            className="input_field"
-                                            value={inputValues.password || ''}
-                                            onChange={handleInputValues}
-                                            required
-                                        />
-                                        <label className="input_label">Password</label>
-                                    </div>
-
-                                    {
-                                        isSignupVisible && (
-                                            <div className="input_box">
-                                                <input
-                                                    type="password"
-                                                    name="conf_password"
-                                                    className="input_field"
-                                                    value={inputValues.conf_password || ''}
-                                                    onChange={handleInputValues}
-                                                    required
-                                                />
-                                                <label className="input_label">Confirm Password</label>
-                                            </div>
-                                        )
-                                    }
-
-                                    <button
-                                        type="submit"
-                                        className="btn login_btn"
-                                    >
-                                        {isSignupVisible ? 'Signup' : 'Login'}
-                                    </button>
-
-                                </div>
-
-                                {/*===== Form-Footer =====*/}
-                                <div className="form_foot">
-                                    <p>or login with</p>
-                                    <div className="login_options">
-                                        <Link to="/">Facebook</Link>
-                                        <Link to="/">Google</Link>
-                                        <Link to="/">Twitter</Link>
-                                    </div>
-                                </div>
-
-                                {/*===== Form-Close-Btn =====*/}
-                                <div
-                                    className="close_btn"
-                                    title="Close"
-                                    onClick={() => toggleForm(false)}
-                                >
-                                    &times;
-                                </div>
-
-                            </form>
+        isFormOpen && (
+            <div className="backdrop">
+                <div className="modal_centered">
+                    <form id="account_form" ref={formRef} onSubmit={handleSubmit}>
+                        <div className="form_head">
+                            <h2>{isSignup ? 'Signup' : 'Login'}</h2>
+                            <p>
+                                {isSignup ? 'Already have an account?' : 'New to AudioLoom?'}
+                                &nbsp;&nbsp;
+                                <button type="button" onClick={handleToggleForm}>
+                                    {isSignup ? 'Login' : 'Create an account'}
+                                </button>
+                            </p>
                         </div>
-                    </div>
-                )
-            }
-        </>
+
+                        {errorMessage && <p className="error_message">{errorMessage}</p>}
+
+                        <div className="form_body">
+                            {isSignup && (
+                                <InputField type="text" name="username" label="Username" value={inputValues.username} onChange={handleInputValues} />
+                            )}
+                            <InputField type="email" name="mail" label="Email" value={inputValues.mail} onChange={handleInputValues} />
+                            <InputField type="password" name="password" label="Password" value={inputValues.password} onChange={handleInputValues} />
+
+                            <button type="submit" className="btn login_btn">{isSignup ? 'Signup' : 'Login'}</button>
+                        </div>
+
+                        <div className="close_btn" title="Close" onClick={() => toggleForm(false)}>&times;</div>
+                    </form>
+                </div>
+            </div>
+        )
     );
 };
+
+const InputField = ({ type, name, label, value, onChange }) => (
+    <div className="input_box">
+        <input type={type} name={name} className="input_field" value={value || ''} onChange={onChange} required />
+        <label className="input_label">{label}</label>
+    </div>
+);
 
 export default AccountForm;

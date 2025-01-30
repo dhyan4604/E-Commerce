@@ -37,7 +37,7 @@ const Header = () => {
                    
                    
                         <h2 className="nav_logo" >
-                            {/* <img src='./favicon.ico' alt='logo' classname="logo"/> */}
+                        
                             <Link to="/">AudioLoom</Link>
                         </h2>
                         <nav className="nav_actions">

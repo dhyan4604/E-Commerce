@@ -86,7 +86,7 @@ const Cart = () => {
                                             </div>
                                             <div className="separator"></div>
                                             <div className="total_price">
-                                                {/* <b><small>Total Price</small></b> */}
+                                                <b><small>Total Price</small></b>
                                                 <b>{displayTotalAmount}</b>
                                             </div>
                                         </div>
