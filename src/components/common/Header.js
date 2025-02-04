@@ -60,7 +60,7 @@ const Header = () => {
                             </div>
 
                             <div className="user_action">
-                                <Link to="/login">
+                                <Link to="/profile">
                                 <span>
                                     <AiOutlineUser />
                                 </span>

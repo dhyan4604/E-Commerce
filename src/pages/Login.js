@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom"; // Import the useNavigate hook
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const navigate = useNavigate(); // Create the navigate function
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -12,7 +14,7 @@ const Login = () => {
       const response = await axios.post("http://localhost:5000/api/login", { email, password });
       localStorage.setItem("authToken", response.data.token); // Save the JWT token
       alert("Login successful!");
-      // Redirect or handle success
+      navigate("/"); // Redirect to home page after successful login (change the path as needed)
     } catch (err) {
       setError("Login failed. Please try again.");
     }

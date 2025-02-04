@@ -2,106 +2,128 @@ import React, { useState } from "react";
 import axios from "axios";
 
 const Signup = () => {
-  const [fullName, setFullName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [message, setMessage] = useState("");
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  });
+
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
-    if (!fullName || !email || !password || password !== confirmPassword) {
-      setMessage("Please fill out all fields correctly.");
+
+    if (formData.password !== formData.confirmPassword) {
+      setError("Passwords do not match");
       return;
     }
-  
-    if (!email.trim()) {
-      setMessage("Email is required.");
-      return;
-    }
-  
+
     try {
-      const response = await axios.post(
-        "http://localhost:5000/api/signup", // Endpoint of the backend
-        { fullName, email: email.trim(), password },
-        { withCredentials: true } // ✅ Allow credentials
-      );
-      setMessage(response.data.message);
-    } catch (error) {
-      console.error("Signup error:", error.response?.data || error.message);
-      setMessage(error.response?.data?.message || "Error signing up");
+      const response = await axios.post("http://localhost:5000/api/signup", formData);
+
+      // Save JWT token to localStorage upon successful signup
+      localStorage.setItem("authToken", response.data.token);
+
+      setSuccess("Signup successful! Please login.");
+      setError("");
+      setFormData({
+        name: "",
+        email: "",
+        password: "",
+        confirmPassword: "",
+      });
+    } catch (err) {
+      setError("Error during signup. Please try again.");
     }
   };
-  
+
   return (
-    <div className="signup-page">
-      <div className="signup-form">
-        <h2>Sign Up</h2>
+    <div className="signup-container">
+      <div className="signup-box">
+        <h2>Create an Account</h2>
         <form onSubmit={handleSubmit}>
           <div className="form-group">
-            <label>Full Name</label>
+            <label>Name</label>
             <input
               type="text"
-              placeholder="Enter your full name"
-              value={fullName}
-              onChange={(e) => setFullName(e.target.value)}
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+              required
             />
           </div>
           <div className="form-group">
             <label>Email</label>
             <input
               type="email"
-              placeholder="Enter your email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              required
             />
           </div>
           <div className="form-group">
             <label>Password</label>
             <input
               type="password"
-              placeholder="Create a password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              required
             />
           </div>
           <div className="form-group">
             <label>Confirm Password</label>
             <input
               type="password"
-              placeholder="Confirm your password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
+              name="confirmPassword"
+              value={formData.confirmPassword}
+              onChange={handleChange}
+              required
             />
           </div>
-          <button type="submit" className="signup-btn">
-            Sign Up
-          </button>
+          {error && <p className="error-message">{error}</p>}
+          {success && <p className="success-message">{success}</p>}
+          <button type="submit" className="signup-btn">Sign Up</button>
         </form>
-        {message && <p>{message}</p>}
+        <div className="signup-link">
+          <p>Already have an account? <a href="/login">Login</a></p>
+        </div>
       </div>
       <style>
         {`
-          .signup-page {
+          .signup-container {
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background-color:rgb(0, 0, 0);
+            background-color: rgb(4, 4, 4);
+            font-family: Arial, sans-serif;
           }
 
-          .signup-form {
-            background-color: #black;
+          .signup-box {
+            background-color: black;
             padding: 30px;
             border-radius: 8px;
             width: 100%;
             max-width: 400px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
           }
 
           h2 {
             text-align: center;
             margin-bottom: 20px;
+            color: white;
           }
 
           .form-group {
@@ -112,6 +134,7 @@ const Signup = () => {
             display: block;
             font-weight: bold;
             margin-bottom: 5px;
+            color: white;
           }
 
           input {
@@ -120,6 +143,8 @@ const Signup = () => {
             margin-top: 5px;
             border-radius: 5px;
             border: 1px solid #ccc;
+            box-sizing: border-box;
+            font-size: 14px;
           }
 
           .error-message {
@@ -130,7 +155,7 @@ const Signup = () => {
           .signup-btn {
             width: 100%;
             padding: 12px;
-            background-color:rgb(252, 0, 0);
+            background-color: rgb(252, 0, 0);
             color: white;
             border: none;
             border-radius: 5px;
@@ -140,7 +165,7 @@ const Signup = () => {
           }
 
           .signup-btn:hover {
-            background-color:rgb(225, 80, 80);
+            background-color: rgb(225, 80, 80);
           }
 
           .signup-link {
@@ -149,7 +174,7 @@ const Signup = () => {
           }
 
           .signup-link a {
-            color:rgb(240, 241, 242);
+            color: rgb(240, 241, 242);
             text-decoration: none;
           }
 

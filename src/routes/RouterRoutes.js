@@ -9,6 +9,7 @@ import ErrorPage from '../pages/ErrorPage';
 import Checkout from '../pages/Checkout';
 import Login from '../pages/Login';
 import Signup from '../pages/Signup';
+import Profile from '../pages/Profile';
 
 
 const RouterRoutes = () => {
@@ -19,6 +20,7 @@ const RouterRoutes = () => {
         <>
             <Routes>
                 <Route path="/" element={<Home />} />
+                <Route path="/profile" element={<Profile />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/signup" element={<Signup />} />
                 <Route path="/cart" element={<Cart />} />
