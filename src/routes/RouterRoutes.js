@@ -10,6 +10,7 @@ import Checkout from '../pages/Checkout';
 import Login from '../pages/Login';
 import Signup from '../pages/Signup';
 import Profile from '../pages/Profile';
+import OrderConfirmation from '../pages/Orderconfirmation';
 
 
 const RouterRoutes = () => {
@@ -26,7 +27,8 @@ const RouterRoutes = () => {
                 <Route path="/cart" element={<Cart />} />
                 <Route path="/all-products" element={<AllProducts />} />
                 <Route path="/product-details/:productId" element={<ProductDetails />} />
-                {/* <Route path="/Checkout" element={<Checkout />} /> */}
+                <Route path="/Checkout" element={<Checkout />} />
+                <Route path="/order-confirmation" element={<OrderConfirmation />} />
                 <Route path="*" element={<ErrorPage />} />
             </Routes>
         </>

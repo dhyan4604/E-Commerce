@@ -2,17 +2,16 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-const Profile = ({ user, setUser }) => {
+const Profile = ({ user, setUser }) => { // setUser added
   const navigate = useNavigate();
   const [profile, setProfile] = useState(null);
   const [image, setImage] = useState(null);
   const [address, setAddress] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
-  const [shippingAddress, setShippingAddress] = useState("");  // Updated to match backend field name
+  const [shippingAddress, setShippingAddress] = useState("");
   const [orderHistory, setOrderHistory] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  // Fetch profile on component mount
   useEffect(() => {
     const fetchProfile = async () => {
       const token = localStorage.getItem("authToken");
@@ -26,8 +25,9 @@ const Profile = ({ user, setUser }) => {
           setImage(response.data.profileImage || null);
           setAddress(response.data.address || "");
           setPhoneNumber(response.data.phoneNumber || "");
-          setShippingAddress(response.data.shippingAddress || ""); // Use shippingAddress from backend
+          setShippingAddress(response.data.shippingAddress || "");
           setOrderHistory(response.data.orderHistory || []);
+          setUser(response.data); // Added setUser
         } catch (error) {
           console.error("Error fetching profile", error);
         } finally {
@@ -36,16 +36,15 @@ const Profile = ({ user, setUser }) => {
       }
     };
     fetchProfile();
-  }, [user]);
+  }, [user, setUser]); // Added setUser dependency
 
-  // Handle logout
   const handleLogout = () => {
     localStorage.removeItem("authToken");
-    setUser(null);
-    navigate("/login");
+    setUser(null); // Clear user state on logout
+    navigate("/login"); // Redirect to login page
+    window.location.reload(); // Refresh the page to reflect the logged-out state
   };
-
-  // Handle image upload
+  
   const handleImageUpload = async (event) => {
     const file = event.target.files[0];
     if (file) {
@@ -69,13 +68,11 @@ const Profile = ({ user, setUser }) => {
     }
   };
 
-  // Handle profile update (address, phone, billing address)
   const handleSaveChanges = async () => {
     const token = localStorage.getItem("authToken");
     try {
       setIsLoading(true);
 
-      // Update address
       if (address !== profile.address) {
         await axios.post(
           "http://localhost:5000/api/update-address",
@@ -84,7 +81,6 @@ const Profile = ({ user, setUser }) => {
         );
       }
 
-      // Update phone number
       if (phoneNumber !== profile.phoneNumber) {
         await axios.post(
           "http://localhost:5000/api/update-phone-number",
@@ -93,7 +89,6 @@ const Profile = ({ user, setUser }) => {
         );
       }
 
-      // Update shipping address
       if (shippingAddress !== profile.shippingAddress) {
         await axios.post(
           "http://localhost:5000/api/update-shipping-address",
@@ -119,7 +114,6 @@ const Profile = ({ user, setUser }) => {
         ) : profile ? (
           <>
             <div className="profile-header">
-              {/* Profile Image */}
               <div className="profile-image">
                 {image ? (
                   <img src={`http://localhost:5000${image}`} alt="Profile" />
@@ -131,8 +125,6 @@ const Profile = ({ user, setUser }) => {
                 <h2>{profile.name}</h2>
                 <p>{profile.email}</p>
               </div>
-
-              {/* Select Image Button */}
               <div className="upload-btn-container">
                 <label className="upload-btn">
                   Select Image
@@ -141,7 +133,6 @@ const Profile = ({ user, setUser }) => {
               </div>
             </div>
 
-            {/* Profile Edit Fields */}
             <div className="profile-edit-form">
               <div className="form-group">
                 <label htmlFor="address">Delivery Address</label>
@@ -176,13 +167,11 @@ const Profile = ({ user, setUser }) => {
                 />
               </div>
 
-              {/* Submit Changes */}
               <button className="submit-btn" onClick={handleSaveChanges}>
                 Save Changes
               </button>
             </div>
 
-            {/* Order History Section */}
             <div className="order-history-section">
               <h3>Order History</h3>
               {orderHistory.length > 0 ? (
@@ -198,7 +187,6 @@ const Profile = ({ user, setUser }) => {
               )}
             </div>
 
-            {/* Logout Button */}
             <button className="logout-btn" onClick={handleLogout}>
               Logout
             </button>
@@ -265,7 +253,7 @@ const Profile = ({ user, setUser }) => {
           .upload-btn {
             cursor: pointer;
             padding: 10px 20px;
-            background-color: #ccc;
+            background-color: red;
             border-radius: 5px;
           }
 
@@ -375,7 +363,7 @@ const Profile = ({ user, setUser }) => {
           }
 
           a {
-            color: rgb(112, 117, 123);
+            color: rgb(255, 0, 0);
             text-decoration: none;
           }
 

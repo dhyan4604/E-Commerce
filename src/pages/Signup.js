@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 import axios from "axios";
 
 const Signup = () => {
@@ -11,6 +12,7 @@ const Signup = () => {
 
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const navigate = useNavigate(); // Initialize useNavigate
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -34,14 +36,22 @@ const Signup = () => {
       // Save JWT token to localStorage upon successful signup
       localStorage.setItem("authToken", response.data.token);
 
-      setSuccess("Signup successful! Please login.");
+      setSuccess("Signup successful! Redirecting to login...");
       setError("");
+
+      // Clear form data
       setFormData({
         name: "",
         email: "",
         password: "",
         confirmPassword: "",
       });
+
+      // Redirect to login page after 2 seconds
+      setTimeout(() => {
+        navigate("/login");
+      }, 2000);
+      
     } catch (err) {
       setError("Error during signup. Please try again.");
     }
@@ -149,6 +159,11 @@ const Signup = () => {
 
           .error-message {
             color: red;
+            font-size: 12px;
+          }
+
+          .success-message {
+            color: green;
             font-size: 12px;
           }
 
