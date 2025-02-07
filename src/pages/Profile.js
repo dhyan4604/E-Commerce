@@ -40,7 +40,7 @@ const Profile = ({ user, setUser }) => { // setUser added
 
   const handleLogout = () => {
     localStorage.removeItem("authToken");
-    setUser(null); // Clear user state on logout
+  
     navigate("/login"); // Redirect to login page
     window.location.reload(); // Refresh the page to reflect the logged-out state
   };
