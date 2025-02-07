@@ -25,103 +25,116 @@ const OrderConfirmation = () => {
 
             <Link to="/all-products" className="btn-back">Continue Shopping</Link>
             <style>
-                {`
-                  /* Order Confirmation Container */
-                  .order-confirmation-container {
-                    width: 100%;
-                    max-width: 1200px;
-                    margin: 40px auto;
-                    padding: 40px;
-                    background-color:rgb(0, 0, 0);
-                    border-radius: 10px;
-                    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-                    font-family: 'Arial', sans-serif;
-                    color: #333;
-                  }
+  {`
+    /* Order Confirmation Container */
+    .order-confirmation-container {
+        width: 100%;
+        max-width: 1200px;
+        margin: 40px auto;
+        padding: 40px;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(255, 0, 0, 0.2);
+        font-family: 'Poppins', sans-serif;
+        color: white;
+        animation: fadeIn 0.8s ease-in-out;
+    }
 
-                  /* Confirmation Header */
-                  .order-confirmation-container h2 {
-                    text-align: center;
-                    font-size: 36px;
-                    color: white;
-                    margin-bottom: 40px;
-                    font-weight: 600;
-                  }
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(-20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
 
-                  /* Confirmation Message */
-                  .thank-you-message {
-                    font-size: 24px;
-                    text-align: center;
-                    color:rgb(248, 4, 4);
-                    margin-bottom: 20px;
-                  }
+    /* Confirmation Header */
+    .order-confirmation-container h2 {
+        text-align: center;
+        font-size: 36px;
+        color: #ff4b2b;
+        margin-bottom: 40px;
+        font-weight: 700;
+        text-transform: uppercase;
+    }
 
-                  /* Order Summary */
-                  .order-summary {
-                    background-color:rgb(0, 0, 0);
-                    padding: 25px;
-                    border-radius: 8px;
-                    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-                    margin-bottom: 40px;
-                  }
+    /* Thank You Message */
+    .thank-you-message {
+        font-size: 26px;
+        text-align: center;
+        color: #ff4b2b;
+        font-weight: bold;
+        margin-bottom: 20px;
+        animation: fadeIn 1.2s ease-in-out;
+    }
 
-                  .order-summary h3 {
-                    font-size: 24px;
-                    color: white;
-                    margin-bottom: 20px;
-                    font-weight: 500;
-                  }
+    /* Order Summary */
+    .order-summary {
+        background: rgba(255, 255, 255, 0.1);
+        padding: 25px;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(255, 0, 0, 0.1);
+        margin-bottom: 30px;
+        animation: fadeIn 1s ease-in-out;
+    }
 
-                  .order-details {
-                    font-size: 18px;
-                    color: white;
-                    margin-bottom: 15px;
-                  }
+    .order-summary h3 {
+        font-size: 24px;
+        color: #ff4b2b;
+        margin-bottom: 20px;
+        font-weight: 600;
+    }
 
-                  .order-details span {
-                    font-weight: 600;
-                    color: white;
-                  }
+    .order-details {
+        font-size: 18px;
+        color: white;
+        margin-bottom: 15px;
+    }
 
-                  .order-details p {
-                    margin: 10px 0;
-                  }
+    .order-details span {
+        font-weight: 700;
+        color: white;
+    }
 
-                  /* Back to Shopping Button */
-                  .btn-back {
-                    padding: 12px 30px;
-                    font-size: 20px;
-                    color: #fff;
-                    background-color:rgb(255, 0, 0);
-                    border: none;
-                    border-radius: 5px;
-                    cursor: pointer;
-                    transition: background-color 0.3s ease;
-                    width: 100%;
-                    max-width: 300px;
-                    margin-left: auto;
-                    margin-right: auto;
-                    display: block;
-                    text-align: center;
-                    margin-top: 30px;
-                  }
+    .order-details p {
+        margin: 10px 0;
+    }
 
-                  .btn-back:hover {
-                    background-color: #0056b3;
-                  }
+    /* Back to Shopping Button */
+    .btn-back {
+        padding: 14px 35px;
+        font-size: 20px;
+        font-weight: bold;
+        color: white;
+        background: linear-gradient(90deg, #ff4b2b, #ff416c);
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: transform 0.3s ease, background 0.3s ease;
+        width: 100%;
+        max-width: 300px;
+        margin: 30px auto;
+        display: block;
+        text-align: center;
+    }
 
-                  /* Mobile Responsiveness */
-                  @media (max-width: 768px) {
-                    .order-confirmation-container {
-                      padding: 20px;
-                    }
+    .btn-back:hover {
+        transform: scale(1.05);
+        background: linear-gradient(90deg, #d84315, #d32f2f);
+    }
 
-                    .order-summary .total-price {
-                      font-size: 18px;
-                    }
-                  }
-                `}
-            </style>
+    /* Mobile Responsiveness */
+    @media (max-width: 768px) {
+        .order-confirmation-container {
+            padding: 20px;
+        }
+
+        .btn-back {
+            width: 100%;
+            max-width: none;
+        }
+    }
+  `}
+</style>
+
         </div>
     );
 };

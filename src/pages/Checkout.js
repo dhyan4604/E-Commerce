@@ -123,189 +123,194 @@ const Checkout = () => {
                 </div>
             )}
 
-            <style>
-                {`
-                /* Checkout Container */
-                .checkout-container {
-                    width: 100%;
-                    max-width: 1200px;
-                    margin: 40px auto;
-                    padding: 40px;
-                    background-color:rgb(2, 2, 2);
-                    border-radius: 10px;
-                    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-                    font-family: 'Arial', sans-serif;
-                    color: #333;
-                }
+<style>
+  {`
+    /* Checkout Page Container */
+    .checkout-container {
+        width: 100%;
+        max-width: 1200px;
+        margin: 40px auto;
+        padding: 40px;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(255, 0, 0, 0.2);
+        font-family: 'Poppins', sans-serif;
+        color: white;
+        animation: fadeIn 0.8s ease-in-out;
+    }
 
-                /* Checkout Header */
-                .checkout-container h2 {
-                    text-align: center;
-                    font-size: 36px;
-                    color: white;
-                    margin-bottom: 40px;
-                    font-weight: 600;
-                }
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(-20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
 
-                /* Payment Method Section */
-                .payment-method {
-                    background-color: #f9f9f9;
-                    padding: 25px;
-                    border-radius: 8px;
-                    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-                    margin-bottom: 40px;
-                }
+    /* Header Styling */
+    .checkout-container h2 {
+        text-align: center;
+        font-size: 36px;
+        color: #ff4b2b;
+        margin-bottom: 40px;
+        font-weight: 700;
+        text-transform: uppercase;
+    }
 
-                .payment-method h3 {
-                    font-size: 24px;
-                    color: #444;
-                    margin-bottom: 20px;
-                    font-weight: 500;
-                }
+    /* Checkout Sections */
+    .checkout-section {
+        background: rgba(255, 255, 255, 0.1);
+        padding: 25px;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(255, 0, 0, 0.1);
+        margin-bottom: 30px;
+        animation: fadeIn 1s ease-in-out;
+    }
 
-                .payment-option {
-                    display: flex;
-                    align-items: center;
-                    gap: 15px;
-                    font-size: 18px;
-                    margin-bottom: 15px;
-                }
+    .checkout-section h3 {
+        font-size: 24px;
+        color: #ff4b2b;
+        margin-bottom: 20px;
+        font-weight: 600;
+    }
 
-                .payment-option input {
-                    transform: scale(1.4);
-                    margin: 0;
-                }
+    /* Payment Options */
+    .payment-option {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        font-size: 18px;
+        margin-bottom: 15px;
+        transition: transform 0.2s ease;
+    }
 
-                .payment-option label {
-                    color: #555;
-                    font-weight: 400;
-                }
+    .payment-option:hover {
+        transform: scale(1.02);
+    }
 
-                /* Order Summary Section */
-                .order-summary {
-                    background-color: #f9f9f9;
-                    padding: 25px;
-                    border-radius: 8px;
-                    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-                    margin-bottom: 40px;
-                }
+    .payment-option input {
+        transform: scale(1.3);
+        margin: 0;
+    }
 
-                .order-summary h3 {
-                    font-size: 24px;
-                    color: #444;
-                    margin-bottom: 20px;
-                    font-weight: 500;
-                }
+    .payment-option label {
+        color: #ddd;
+        font-weight: 500;
+    }
 
-                .order-details {
-                    font-size: 18px;
-                    color: #555;
-                    margin-bottom: 15px;
-                }
+    /* Order Summary */
+    .order-details {
+        font-size: 18px;
+        color: #ddd;
+        margin-bottom: 15px;
+    }
 
-                .order-details span {
-                    font-weight: 600;
-                    color: #000;
-                }
+    .order-details span {
+        font-weight: 700;
+        color: white;
+    }
 
-                .order-details p {
-                    margin: 10px 0;
-                }
+    .order-details p {
+        margin: 10px 0;
+    }
 
-                /* Shipping Information Section */
-                .shipping-info {
-                    background-color: #f9f9f9;
-                    padding: 25px;
-                    border-radius: 8px;
-                    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-                    margin-bottom: 40px;
-                }
+    /* Shipping Information */
+    .shipping-info input {
+        width: 100%;
+        padding: 12px;
+        border-radius: 8px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        background: rgba(255, 255, 255, 0.1);
+        color: white;
+        font-size: 16px;
+        transition: border-color 0.3s ease-in-out, transform 0.2s ease;
+    }
 
-                .shipping-info h3 {
-                    font-size: 24px;
-                    color: #444;
-                    margin-bottom: 20px;
-                    font-weight: 500;
-                }
+    .shipping-info input:focus {
+        border-color: #ff4b2b;
+        outline: none;
+        transform: scale(1.02);
+    }
 
-                /* Submit Button */
-                .checkout-actions {
-                    text-align: center;
-                }
+    /* Checkout Button */
+    .checkout-actions {
+        text-align: center;
+    }
 
-                .btn-submit {
-                    padding: 12px 30px;
-                    font-size: 20px;
-                    color: #fff;
-                    background-color:rgb(255, 0, 0);
-                    border: none;
-                    border-radius: 5px;
-                    cursor: pointer;
-                    transition: background-color 0.3s ease;
-                    width: 100%;
-                    max-width: 300px;
-                }
+    .btn-submit {
+        padding: 14px 35px;
+        font-size: 20px;
+        font-weight: bold;
+        color: white;
+        background: linear-gradient(90deg, #ff4b2b, #ff416c);
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: transform 0.3s ease, background 0.3s ease;
+        width: 100%;
+        max-width: 300px;
+    }
 
-                .btn-submit:hover {
-                    background-color:rgb(179, 0, 0);
-                }
+    .btn-submit:hover {
+        transform: scale(1.05);
+        background: linear-gradient(90deg, #d84315, #d32f2f);
+    }
 
-                /* Mobile Responsiveness */
-                @media (max-width: 768px) {
-                    .checkout-container {
-                        padding: 20px;
-                    }
+    /* Mobile Responsiveness */
+    @media (max-width: 768px) {
+        .checkout-container {
+            padding: 20px;
+        }
 
-                    .payment-method, .order-summary, .shipping-info {
-                        padding: 20px;
-                    }
+        .checkout-section {
+            padding: 20px;
+        }
 
-                    .btn-submit {
-                        width: 100%;
-                        max-width: none;
-                    }
+        .btn-submit {
+            width: 100%;
+            max-width: none;
+        }
+    }
 
-                    .order-summary .total-price {
-                        font-size: 18px;
-                    }
-                }
+    /* Login Modal Styling */
+    .login-modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: rgba(0, 0, 0, 0.6);
+        animation: fadeIn 0.3s ease-in-out;
+    }
 
-                /* Login Modal Styling */
-                .login-modal {
-                    position: fixed;
-                    top: 0;
-                    left: 0;
-                    width: 100%;
-                    height: 100%;
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    background: rgba(0, 0, 0, 0.5);
-                }
+    .modal-content {
+        background: #222;
+        padding: 25px;
+        border-radius: 10px;
+        text-align: center;
+        color: white;
+        box-shadow: 0 5px 15px rgba(255, 0, 0, 0.2);
+    }
 
-                .modal-content {
-                    background: #fff;
-                    padding: 20px;
-                    border-radius: 8px;
-                    text-align: center;
-                }
+    .btn-login {
+        padding: 12px 25px;
+        font-size: 18px;
+        background: linear-gradient(90deg, #ff4b2b, #ff416c);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: transform 0.3s ease;
+    }
 
-                .btn-login {
-                    padding: 10px 20px;
-                    font-size: 16px;
-                    background-color: #ff0000;
-                    color: #fff;
-                    border: none;
-                    border-radius: 5px;
-                    cursor: pointer;
-                    margin-top: 20px;
-                }
+    .btn-login:hover {
+        transform: scale(1.05);
+        background: linear-gradient(90deg, #d84315, #d32f2f);
+    }
+  `}
+</style>
 
-                .btn-login:hover {
-                    background-color: #b30000;
-                }
-            `}
-            </style>
         </div>
     );
 };

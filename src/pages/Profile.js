@@ -199,179 +199,226 @@ const Profile = ({ user, setUser }) => { // setUser added
       </div>
 
       <style>
-        {`
-          /* Profile Page Styles */
-          .profile-page {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background: rgb(4, 4, 4);
-            font-family: 'Arial', sans-serif;
-          }
+  {`
+    /* Profile Page - Modern & Elegant Design */
+    .profile-page {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: #000; /* Black background */
+      font-family: 'Poppins', sans-serif;
+    }
 
-          .profile-container {
-            background-color: white;
-            padding: 40px;
-            border-radius: 10px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 700px;
-            text-align: center;
-          }
+    .profile-container {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 40px;
+      border-radius: 12px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      width: 100%;
+      max-width: 600px;
+      text-align: center;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      animation: fadeIn 0.8s ease-in-out;
+    }
 
-          .profile-header {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-            gap: 20px;
-            margin-bottom: 30px;
-          }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
 
-          .profile-image {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            overflow: hidden;
-            background-color: #e0e0e0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-          }
+    .profile-header {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 15px;
+      margin-bottom: 25px;
+    }
 
-          .profile-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-          }
+    .profile-info h2 {
+      font-size: 26px;
+      margin: 0;
+      color: white; /* Header text color updated */
+    }
 
-          .upload-btn-container {
-            margin-top: 10px;
-          }
+    .profile-info p {
+      font-size: 15px;
+      color: #c5c6c7;
+    }
 
-          .upload-btn {
-            cursor: pointer;
-            padding: 10px 20px;
-            background-color: red;
-            border-radius: 5px;
-          }
+    .profile-image {
+      width: 130px;
+      height: 130px;
+      border-radius: 50%;
+      overflow: hidden;
+      background-color: #222;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 4px 10px rgba(255, 255, 255, 0.1);
+      transition: transform 0.3s ease-in-out;
+    }
 
-          .upload-btn input {
-            display: none;
-          }
+    .profile-image:hover {
+      transform: scale(1.08);
+    }
 
-          .profile-info h2 {
-            font-size: 24px;
-            margin: 0;
-            color: #333;
-          }
+    .profile-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
 
-          .profile-info p {
-            font-size: 16px;
-            color: #777;
-          }
+    .upload-btn-container {
+      margin-top: 10px;
+    }
 
-          .profile-edit-form {
-            margin-top: 30px;
-            text-align: left;
-          }
+    .upload-btn {
+      cursor: pointer;
+      padding: 10px 20px;
+      background: linear-gradient(90deg, #ff4b2b, #ff416c);
+      border-radius: 8px;
+      color: white;
+      font-weight: bold;
+      font-size: 14px;
+      transition: transform 0.3s ease, background 0.3s ease;
+      border: none;
+    }
 
-          .form-group {
-            margin-bottom: 20px;
-          }
+    .upload-btn:hover {
+      transform: scale(1.05);
+      background: linear-gradient(90deg, #d84315, #d32f2f);
+    }
 
-          .form-group label {
-            display: block;
-            font-size: 16px;
-            color: #333;
-            margin-bottom: 5px;
-          }
+    .upload-btn input {
+      display: none;
+    }
 
-          .form-group input {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 16px;
-            color: #333;
-          }
+    .profile-edit-form {
+      margin-top: 30px;
+      text-align: left;
+      animation: fadeIn 1s ease-in-out;
+    }
 
-          .form-group input:focus {
-            border-color: rgb(151, 156, 160);
-          }
+    .form-group {
+      margin-bottom: 20px;
+    }
 
-          .submit-btn {
-            width: 100%;
-            padding: 12px;
-            background-color: rgb(255, 0, 0);
-            color: white;
-            border: none;
-            border-radius: 5px;
-            font-size: 16px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: background-color 0.3s;
-          }
+    .form-group label {
+      display: block;
+      font-size: 16px;
+      color: white;
+      margin-bottom: 5px;
+    }
 
-          .submit-btn:hover {
-            background-color: rgb(171, 91, 99);
-          }
+    .form-group input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 5px;
+      font-size: 16px;
+      color: white;
+      background-color: rgba(255, 255, 255, 0.1);
+      transition: border-color 0.3s ease;
+    }
 
-          .order-history-section {
-            margin-top: 30px;
-            text-align: left;
-          }
+    .form-group input:focus {
+      border-color: #ff4b2b;
+      outline: none;
+    }
 
-          .order-history-section h3 {
-            font-size: 20px;
-            color: #333;
-            margin-bottom: 10px;
-          }
+    .submit-btn {
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(90deg, #ff4b2b, #ff416c);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: transform 0.3s ease, background 0.3s ease;
+    }
 
-          .order-history-section ul {
-            list-style-type: none;
-            padding: 0;
-          }
+    .submit-btn:hover {
+      transform: scale(1.05);
+      background: linear-gradient(90deg, #d84315, #d32f2f);
+    }
 
-          .order-history-section li {
-            font-size: 16px;
-            margin-bottom: 10px;
-          }
+    .order-history-section {
+      margin-top: 30px;
+      text-align: left;
+      animation: fadeIn 1.2s ease-in-out;
+    }
 
-          .logout-btn {
-            width: 100%;
-            padding: 12px;
-            margin-top: 20px;
-            background-color: rgb(255, 0, 0);
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: bold;
-            transition: background-color 0.3s;
-          }
+    .order-history-section h3 {
+      font-size: 20px;
+      color: white;
+      margin-bottom: 10px;
+    }
 
-          .logout-btn:hover {
-            background-color: rgb(171, 91, 99);
-          }
+    .order-history-section ul {
+      list-style-type: none;
+      padding: 0;
+      color: white;
+    }
 
-          .login-prompt {
-            font-size: 16px;
-            color: #333;
-          }
+    .order-history-section li {
+      font-size: 16px;
+      margin-bottom: 10px;
+      padding: 8px;
+      border-radius: 5px;
+      background: rgba(255, 255, 255, 0.1);
+      transition: transform 0.3s, background 0.3s;
+    }
 
-          a {
-            color: rgb(255, 0, 0);
-            text-decoration: none;
-          }
+    .order-history-section li:hover {
+      transform: scale(1.02);
+      background: rgba(255, 255, 255, 0.2);
+      color: #ff4b2b;
+    }
 
-          a:hover {
-            color: rgb(179, 0, 0);
-          }
-        `}
-      </style>
+    .logout-btn {
+      width: 100%;
+      padding: 12px;
+      margin-top: 20px;
+      background: linear-gradient(90deg, #ff4b2b, #ff416c);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: bold;
+      transition: transform 0.3s ease, background 0.3s ease;
+    }
+
+    .logout-btn:hover {
+      transform: scale(1.05);
+      background: linear-gradient(90deg, #d84315, #d32f2f);
+    }
+
+    .login-prompt {
+      font-size: 16px;
+      color: white;
+      margin-top: 15px;
+    }
+
+    a {
+      color: #ff4b2b;
+      text-decoration: none;
+      font-weight: bold;
+      transition: color 0.3s ease;
+    }
+
+    a:hover {
+      color: #ff1a1a;
+    }
+  `}
+</style>
+
+
     </div>
   );
 };
