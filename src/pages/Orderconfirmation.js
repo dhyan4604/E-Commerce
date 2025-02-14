@@ -1,9 +1,8 @@
-import React from 'react';
-import { useLocation, Link } from 'react-router-dom';
+import React from "react";
+import { useLocation, Link } from "react-router-dom";
 
 const OrderConfirmation = () => {
     const { state } = useLocation();
-    const { displayCartTotal, displayCartDiscount, displayTotalAmount } = state || {};
 
     return (
         <div className="order-confirmation-container">
@@ -11,21 +10,14 @@ const OrderConfirmation = () => {
 
             <div className="thank-you-message">
                 <p>Thank you for your order! Your order has been placed successfully.</p>
+                <p className="delivery-time">Your items will be delivered within <strong>3-5 business days</strong>.</p>
             </div>
 
-            <div className="order-summary">
-                <h3>Order Summary</h3>
-                <div className="order-details">
-                    <p><strong>Total Amount (Original Price):</strong> <span>{displayCartTotal}</span></p>
-                    <p><strong>Discount:</strong> <span>- {displayCartDiscount}</span></p>
-                    <p><strong>Shipping:</strong> <span>Free</span></p>
-                    <p><b>Total Price:</b> <span>{displayTotalAmount}</span></p> {/* Display total price here */}
-                </div>
-            </div>
-
-            <Link to="/all-products" className="btn-back">Continue Shopping</Link>
+            <Link to="/all-products" className="btn-back">
+                Continue Shopping
+            </Link>
             <style>
-  {`
+                {`
     /* Order Confirmation Container */
     .order-confirmation-container {
         width: 100%;
@@ -66,36 +58,11 @@ const OrderConfirmation = () => {
         animation: fadeIn 1.2s ease-in-out;
     }
 
-    /* Order Summary */
-    .order-summary {
-        background: rgba(255, 255, 255, 0.1);
-        padding: 25px;
-        border-radius: 10px;
-        box-shadow: 0 4px 10px rgba(255, 0, 0, 0.1);
-        margin-bottom: 30px;
-        animation: fadeIn 1s ease-in-out;
-    }
-
-    .order-summary h3 {
-        font-size: 24px;
-        color: #ff4b2b;
-        margin-bottom: 20px;
-        font-weight: 600;
-    }
-
-    .order-details {
-        font-size: 18px;
+    .thank-you-message .delivery-time {
+        font-size: 20px;
         color: white;
-        margin-bottom: 15px;
-    }
-
-    .order-details span {
-        font-weight: 700;
-        color: white;
-    }
-
-    .order-details p {
-        margin: 10px 0;
+        margin-top: 10px;
+        animation: fadeIn 1.5s ease-in-out;
     }
 
     /* Back to Shopping Button */
@@ -133,8 +100,7 @@ const OrderConfirmation = () => {
         }
     }
   `}
-</style>
-
+            </style>
         </div>
     );
 };

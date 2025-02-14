@@ -1,14 +1,18 @@
 #footer {
-    background-color: var(--black-color);
+    background: linear-gradient(180deg, #121212, #1e1e1e); /* Gradient background for premium look */
+    color: rgb(169, 175, 195); /* Consistent text color */
     @include padding-y(3rem, 2rem);
 
     .separator {
+        height: 1px;
+        background: rgba(255, 255, 255, 0.2); /* Subtle separator */
         @include margin-y(2.5rem, 2rem);
         opacity: 0.7;
     }
 }
 
 .footer_wrapper {
+    display: grid;
     grid-template-columns: 1.4fr repeat(3, 1fr);
     justify-items: center;
     gap: 2rem;
@@ -34,6 +38,18 @@
 
     .btn {
         margin-top: 1rem;
+        background: linear-gradient(90deg, #ff5722, #e91e63); /* Gradient button */
+        color: #fff;
+        padding: 0.8rem 1.5rem;
+        border-radius: 8px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: transform 0.3s ease, background 0.3s ease;
+
+        &:hover {
+            transform: scale(1.05);
+            background: linear-gradient(90deg, #d84315, #c2185b);
+        }
     }
 }
 
@@ -46,9 +62,12 @@
         a {
             font-size: 0.9rem;
             opacity: 0.8;
+            color: rgb(169, 175, 195);
+            transition: opacity 0.3s ease, color 0.3s ease;
 
             &:hover {
                 opacity: 1;
+                color: #ff5722; /* Highlight color on hover */
             }
         }
     }
@@ -70,9 +89,11 @@
     a {
         color: #eee;
         opacity: 0.8;
+        transition: opacity 0.3s ease, color 0.3s ease;
 
         &:hover {
             opacity: 1;
+            color: #ff5722; /* Highlight link color */
         }
     }
 }
@@ -82,4 +103,13 @@
     gap: 2rem;
     font-size: 1.2rem;
     margin-right: 4rem;
+
+    a {
+        color: rgb(169, 175, 195);
+        transition: color 0.3s ease;
+
+        &:hover {
+            color: #ff5722; /* Highlight social icons */
+        }
+    }
 }

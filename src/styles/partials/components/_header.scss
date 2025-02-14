@@ -4,32 +4,42 @@
     left: 0;
     z-index: 99;
     width: 100%;
-    @include padding-y(0.8rem, 0.8rem);
-    @include transition(background-color, 0.2s, linear);
+    padding: 0.8rem 0.8rem;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.8), transparent);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
 
     &.sticky {
-        background-color: var(--black-color);
+        background-color: #1a1a1a; /* Solid background for sticky state */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Elevation effect when sticky */
     }
 }
 
 .navbar {
-    @include flexbox(space-between, center);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .nav_logo {
-    @include devices(xs) {
+    font-size: 1.4rem;
+    color: #fff;
+    font-weight: bold;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+
+    @media (max-width: 576px) {
         font-size: 1.2rem;
     }
-    
 }
 
 .nav_actions {
-    @include flexbox($alignItems: center);
+    display: flex;
+    align-items: center;
     gap: 3rem;
     font-size: 1.5rem;
+    color: #eee;
 
-    @include devices(xs) {
-        gap: 2.5rem;
+    @media (max-width: 576px) {
+        gap: 2rem;
         font-size: 1.2rem;
     }
 }
@@ -43,7 +53,9 @@
 .search_action,
 .cart_action {
     &:hover .tooltip {
-        @include toggleVisibility(visible, 1);
+        visibility: visible;
+        opacity: 1;
+        transition: opacity 0.3s ease;
     }
 }
 
@@ -51,44 +63,57 @@
 .user_action {
     span {
         cursor: pointer;
+        color: #ddd;
+        transition: color 0.3s ease;
+
+        &:hover {
+            color: #ff5722; /* Highlight on hover */
+        }
     }
 }
 
 .cart_action {
-
     .badge {
-        @include centered;
-        @include dimension(20px, 20px);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 22px;
+        height: 22px;
         position: absolute;
         top: 0;
-        right: -20px;
-        background-color: var(--main-color-2);
+        right: -15px;
+        background: #ff5722;
+        color: #fff;
+        font-size: 0.75rem;
         border-radius: 50%;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
     }
 }
 
 .user_action {
-
     .dropdown_menu {
         position: absolute;
         top: 50px;
         right: 0;
-        width: 17.5rem;
-        background-color: var(--bg-color-2);
-        padding: 1.4rem;
+        width: 18rem;
+        background-color: #2a2a2a; /* Dark dropdown background */
+        padding: 1.5rem;
         font-size: 0.9rem;
-        border-radius: 3px;
-        @include bordered(1px, var(--text-muted));
-        @include toggleVisibility(hidden, 0);
-        @include transition(all, 0.2s, ease-in-out);
+        border-radius: 8px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+        visibility: hidden;
+        opacity: 0;
+        transition: visibility 0.2s, opacity 0.3s ease-in-out;
 
         h4 {
-            font-weight: 600;
+            font-weight: bold;
             letter-spacing: 0.5px;
+            color: #fff;
 
             a {
-                color: var(--main-color);
-                opacity: 0.95;
+                color: #ff5722;
+                text-decoration: none;
+                opacity: 0.9;
 
                 &:hover {
                     opacity: 1;
@@ -97,34 +122,43 @@
         }
 
         p {
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             margin-top: 0.5rem;
+            color: #ccc;
         }
 
         button {
             margin-top: 1rem;
             padding: 0.8rem 1rem;
-            @include bordered(1px, var(--text-muted));
-            @include transition(all, 0.3s, ease);
+            background: transparent;
+            color: #eee;
+            border: 1px solid #555;
+            border-radius: 6px;
+            transition: all 0.3s ease;
 
             &:hover {
-                color: #eee;
-                border-color: #eee;
+                color: #ff5722;
+                border-color: #ff5722;
+                background: rgba(255, 87, 34, 0.1);
             }
         }
 
         li {
-            &:not(:last-child) {
-                margin-bottom: 0.5rem;
-            }
+            margin-bottom: 0.5rem;
 
-            a:hover {
-                color: #eee;
+            a {
+                color: #ddd;
+                text-decoration: none;
+
+                &:hover {
+                    color: #ff5722;
+                }
             }
         }
     }
 
     &:hover .dropdown_menu {
-        @include toggleVisibility(visible, 1);
+        visibility: visible;
+        opacity: 1;
     }
 }

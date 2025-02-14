@@ -1,19 +1,26 @@
 #preloader {
     width: 100%;
     min-height: 100vh;
-    background-color: var(--bg-color);
+    background-color: var(--bg-color); /* Background color variable */
     position: fixed;
     top: 0;
     left: 0;
     z-index: 9999;
-    @include centered;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .loader {
-    @include dimension(12.5rem, 12.5rem);
+    width: 12.5rem;
+    height: 12.5rem;
     border-radius: 50%;
-    box-shadow: 1px 8px 8px var(--main-color);
+    border: 5px solid rgba(255, 255, 255, 0.2); /* Transparent border */
+    border-top: 5px solid var(--main-color); /* Accent color for loader */
     animation: spin 1.4s linear infinite;
+
+    /* Adding glow effect for the loader */
+    box-shadow: 0 0 20px var(--main-color), 0 0 40px rgba(255, 255, 255, 0.1);
 }
 
 @keyframes spin {
@@ -28,13 +35,17 @@
 
 .loader_text {
     position: absolute;
-    top: 50%;
+    top: 60%; /* Slightly below the loader */
     left: 50%;
     transform: translate(-50%, -50%);
-    animation: text 1s linear infinite alternate;
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: var(--text-muted);
+    animation: textFade 1s linear infinite alternate;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
-@keyframes text {
+@keyframes textFade {
     0% {
         opacity: 0.4;
     }

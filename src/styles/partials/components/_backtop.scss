@@ -3,19 +3,28 @@
     bottom: 2vh;
     right: 1.3vw;
     z-index: 99;
-    background-color: var(--main-color);
-    color: #fff;
+    background: linear-gradient(90deg, #ff5722, #e91e63); /* Gradient background for modern style */
+    color: rgb(169, 175, 195); /* Text color remains the same */
     font-size: 1.4rem;
-    padding: 0.6rem;
+    padding: 0.8rem 1rem; /* Adjusted padding for better aesthetics */
     cursor: pointer;
-    border-radius: 3px;
+    border-radius: 50%; /* Circular shape for a sleek appearance */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Soft shadow for premium feel */
     transform: scale(0);
-    @include centered;
-    @include toggleVisibility(hidden, 0);
-    @include transition($duration: 0.3s);
+    opacity: 0; /* Initial hidden state */
+    transition: transform 0.3s ease, opacity 0.3s ease; /* Smooth animations */
 
     &.popped {
         transform: scale(1);
-        @include toggleVisibility(visible, 1);
+        opacity: 1; /* Visible state when active */
+    }
+
+    &:hover {
+        transform: scale(1.1); /* Slight zoom on hover */
+        background: linear-gradient(90deg, #d84315, #c2185b); /* Darker gradient on hover */
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); /* Enhanced shadow on hover */
     }
 }

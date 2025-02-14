@@ -1,44 +1,51 @@
 #account_form {
     position: relative;
-    background-color: var(--bg-color);
+    background: linear-gradient(180deg, #1e1e1e, #2a2a2a); /* Gradient background for depth */
     max-width: 480px;
     width: 100%;
     padding: 3rem;
-    border-radius: 3px;
+    border-radius: 12px; /* Smooth, modern border radius */
     margin: 0 auto;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.5); /* Subtle shadow for elevation */
 
     .close_btn {
-        background-color: rgba(0, 0, 0, 0.5);
+        background-color: rgba(0, 0, 0, 0.6);
         color: #eee;
         position: absolute;
-        top: 0;
-        right: 0;
-        width: 30px;
-        height: 30px;
+        top: 10px;
+        right: 10px;
+        width: 36px;
+        height: 36px;
         font-size: 1.8rem;
-        line-height: 30px;
+        line-height: 36px;
         text-align: center;
         cursor: pointer;
-        opacity: 0.8;
-        transition: opacity 0.2s ease;
+        border-radius: 50%; /* Circular close button */
+        transition: all 0.3s ease;
 
         &:hover {
-            opacity: 1;
+            background-color: rgba(255, 255, 255, 0.2);
+            color: #fff;
+            transform: scale(1.1);
         }
     }
 }
 
 .form_head {
     h2 {
-        margin-bottom: 0.6rem;
+        margin-bottom: 0.8rem;
+        color: #fff;
+        text-shadow: 0 2px 5px rgba(0, 0, 0, 0.5); /* Enhance the title */
     }
 
     button {
-        color: #eee;
+        color: #ddd;
         opacity: 0.8;
+        transition: opacity 0.3s ease, color 0.3s ease;
 
         &:hover {
             opacity: 1;
+            color: #ff5722; /* Highlight color */
         }
     }
 }
@@ -52,25 +59,49 @@
         position: absolute;
         top: 50%;
         left: 10px;
+        color: #aaa;
         transform-origin: 0 0;
-        background-color: var(--bg-color);
-        margin-top: -8px;
+        background-color: #2a2a2a;
         padding: 0 5px;
-        transition: transform 0.2s ease-in-out;
+        border-radius: 4px;
+        transition: transform 0.3s ease, color 0.3s ease;
     }
 
     .input_field {
+        background: #333;
+        color: #fff;
         padding: 0.95rem 0.85rem;
-        
+        border: 1px solid #444;
+        border-radius: 6px;
+        transition: border-color 0.3s ease;
+
+        &:focus {
+            border-color: #ff5722;
+        }
+
         &:focus-within ~ .input_label,
         &:valid ~ .input_label {
             transform: scale(0.85) translateY(-185%);
+            color: #ff5722; /* Highlighted label on interaction */
         }
     }
 
     .login_btn {
         margin-top: 0.8rem;
         margin-bottom: 0.4rem;
+        background: linear-gradient(90deg, #ff5722, #e91e63); /* Gradient button */
+        color: #fff;
+        padding: 1rem;
+        border-radius: 8px;
+        font-weight: bold;
+        text-align: center;
+        cursor: pointer;
+        transition: transform 0.3s ease, background 0.3s ease;
+
+        &:hover {
+            background: linear-gradient(90deg, #d84315, #c2185b);
+            transform: scale(1.05);
+        }
     }
 }
 
@@ -80,6 +111,7 @@
     p {
         position: relative;
         margin: 2rem 0;
+        color: #bbb;
 
         &::before,
         &::after {
@@ -88,13 +120,15 @@
             top: 50%;
             width: 28%;
             height: 1px;
-            background-color: rgba(255, 255, 255, 0.4);
-            margin: 0.5px;
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        &::before {
+            left: 0;
         }
 
         &::after {
             right: 0;
-            left: auto;
         }
     }
 }
@@ -106,21 +140,26 @@
 
     a {
         color: #fff;
-        text-shadow: var(--text-shadow);
-        padding: 0.4rem 0.4rem;
-        padding-top: 0.8rem;
-        padding-bottom: 0.8rem;
+        text-align: center;
+        padding: 0.8rem 0.4rem;
+        border-radius: 6px;
+        font-weight: bold;
+        transition: transform 0.3s ease, background-color 0.3s ease;
 
         &:nth-child(1) {
-            background-color: var(--fb-color);
+            background-color: #4267B2; /* Facebook blue */
         }
 
         &:nth-child(2) {
-            background-color: var(--google-color);
+            background-color: #DB4437; /* Google red */
         }
 
         &:nth-child(3) {
-            background-color: var(--twitter-color);
+            background-color: #1DA1F2; /* Twitter blue */
+        }
+
+        &:hover {
+            transform: scale(1.1);
         }
     }
 }

@@ -1,318 +1,232 @@
-import React, { useState, useContext, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import cartContext from '../contexts/cart/cartContext';  // Assuming you have cart context
-import { calculateTotal, displayMoney } from '../helpers/utils';  // Assuming helper functions
-import axios from 'axios';
+import React, { useState, useContext, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import cartContext from "../contexts/cart/cartContext";
+import axios from "axios";
+import { calculateTotal, displayMoney } from "../helpers/utils";
 
 const Checkout = () => {
-    const { cartItems } = useContext(cartContext);
-    const navigate = useNavigate();
+  const { cartItems } = useContext(cartContext);
+  const navigate = useNavigate();
 
-    const [userProfile, setUserProfile] = useState(null);
-    const [loginModalVisible, setLoginModalVisible] = useState(false);
+  const [userProfile, setUserProfile] = useState(null);
+  const [formData, setFormData] = useState({
+    name: "",
+    address: "",
+    phone: "",
+    paymentMethod: "Cash on Delivery (COD)",
+  });
 
-    // Fetch the user's profile (name and shipping address)
-    useEffect(() => {
-        const fetchUserProfile = async () => {
-            const token = localStorage.getItem("authToken");
-            if (token) {
-                try {
-                    const response = await axios.get("http://localhost:5000/api/profile", {
-                        headers: { Authorization: `Bearer ${token}` },
-                    });
-                    setUserProfile(response.data);  // Set profile data including name and shipping address
-                } catch (error) {
-                    console.error("Error fetching profile data", error);
-                }
-            } else {
-                setLoginModalVisible(true);  // Show login modal if user is not logged in
-            }
-        };
-        fetchUserProfile();
-    }, []);
-
-    // Calculate totals
-    const cartQuantity = cartItems.length;
-
-    const cartTotal = cartItems.map(item => item.originalPrice * item.quantity);
-    const calculateCartTotal = calculateTotal(cartTotal);
-    const displayCartTotal = displayMoney(calculateCartTotal);
-
-    const cartDiscount = cartItems.map(item => (item.originalPrice - item.finalPrice) * item.quantity);
-    const calculateCartDiscount = calculateTotal(cartDiscount);
-    const displayCartDiscount = displayMoney(calculateCartDiscount);
-
-    const totalAmount = calculateCartTotal - calculateCartDiscount;
-    const displayTotalAmount = displayMoney(totalAmount);
-
-    const [selectedPayment, setSelectedPayment] = useState('cash');
-
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        if (!localStorage.getItem("authToken")) {
-            setLoginModalVisible(true);  // Show login modal if not logged in
-            return;
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      const token = localStorage.getItem("authToken");
+      if (token) {
+        try {
+          const response = await axios.get("http://localhost:5000/api/profile", {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          setUserProfile(response.data);
+          setFormData((prev) => ({
+            ...prev,
+            name: response.data.name,
+            address: response.data.shippingAddress,
+            phone: response.data.phone,
+          }));
+        } catch (error) {
+          console.error("Error fetching profile data:", error);
         }
-        navigate('/order-confirmation', { 
-            state: { 
-                displayCartTotal, 
-                displayCartDiscount, 
-                displayTotalAmount 
-            }
-        });
+      } else {
+        alert("Please log in to continue.");
+        navigate("/login");
+      }
     };
+    fetchUserProfile();
+  }, [navigate]);
 
-    const handleLoginRedirect = () => {
-        navigate('/login'); // Redirect to login page
-        setLoginModalVisible(false); // Hide the modal after redirect
-    };
+  const totalPrice = calculateTotal(cartItems.map((item) => item.finalPrice * item.quantity));
+  const displayTotalPrice = displayMoney(totalPrice);
 
-    return (
-        <div className="checkout-container">
-            <h2>Checkout</h2>
-            <form onSubmit={handleSubmit}>
-                <div className="payment-method">
-                    <h3>Select Payment Method</h3>
-                    <div className="payment-option">
-                        <input
-                            type="radio"
-                            id="cash-on-delivery"
-                            name="payment-method"
-                            value="cash"
-                            checked={selectedPayment === 'cash'}
-                            onChange={() => setSelectedPayment('cash')}
-                        />
-                        <label htmlFor="cash-on-delivery">Cash on Delivery</label>
-                    </div>
-                </div>
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
-                <div className="order-summary">
-                    <h3>Order Summary</h3>
-                    <div className="order-details">
-                        <p>Total Amount (Original Price): <span>{displayCartTotal}</span></p>
-                        <p>Discount: <span>- {displayCartDiscount}</span></p>
-                        <p>Shipping: <span>Free</span></p>
-                        <p><b>Total Price: <span>{displayTotalAmount}</span></b></p>
-                    </div>
-                </div>
-
-                <div className="shipping-info">
-                    <h3>Shipping Information</h3>
-                    {userProfile ? (
-                        <>
-                            <p><b>Name:</b> {userProfile.name}</p>
-                            <p><b>Shipping Address:</b> {userProfile.shippingAddress}</p>
-                        </>
-                    ) : (
-                        <p>Loading shipping information...</p>
-                    )}
-                </div>
-
-                <div className="checkout-actions">
-                    <button type="submit" className="btn-submit">Place Order</button>
-                </div>
-            </form>
-
-            {/* Login Modal */}
-            {loginModalVisible && (
-                <div className="login-modal">
-                    <div className="modal-content">
-                        <p>You need to log in first to proceed with the checkout.</p>
-                        <button onClick={handleLoginRedirect} className="btn-login">Login</button>
-                    </div>
-                </div>
-            )}
-
-<style>
-  {`
-    /* Checkout Page Container */
-    .checkout-container {
-        width: 100%;
-        max-width: 1200px;
-        margin: 40px auto;
-        padding: 40px;
-        background: rgba(255, 255, 255, 0.1);
-        backdrop-filter: blur(10px);
-        border-radius: 12px;
-        box-shadow: 0 10px 30px rgba(255, 0, 0, 0.2);
-        font-family: 'Poppins', sans-serif;
-        color: white;
-        animation: fadeIn 0.8s ease-in-out;
+  const handlePlaceOrder = (e) => {
+    e.preventDefault();
+    if (cartItems.length === 0) {
+      alert("No items in cart!");
+      return;
     }
+    const cartTotal = cartItems.reduce((acc, item) => acc + item.finalPrice * item.quantity, 0);
+    const discount = cartItems.reduce((acc, item) => acc + item.discount * item.quantity, 0); // Assuming each item has a `discount` property
+    const totalAmount = cartTotal - discount;
+    navigate("/order-confirmation", {
+      state: {
+        cartTotal: `₹${cartTotal.toFixed(2)}`,
+        discount: `₹${discount.toFixed(2)}`,
+        totalAmount: `₹${totalAmount.toFixed(2)}`,
+      },
+    });
+  };
 
-    @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(-20px); }
-        to { opacity: 1; transform: translateY(0); }
+  return (
+    <div className="checkout-wrapper">
+      <div className="checkout-container">
+        <h2 className="checkout-header">Checkout</h2>
+        <form onSubmit={handlePlaceOrder}>
+          <div className="form-group">
+            <label>Name:</label>
+            <input
+              type="text"
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+              required
+              className="input-field"
+            />
+          </div>
+          <div className="form-group">
+            <label>Address:</label>
+            <input
+              type="text"
+              name="address"
+              value={formData.address}
+              onChange={handleChange}
+              required
+              className="input-field"
+            />
+          </div>
+          <div className="form-group">
+            <label>Payment Method:</label>
+            <input
+              type="text"
+              value={formData.paymentMethod}
+              disabled
+              className="input-field"
+            />
+          </div>
+
+          <h3 className="order-summary-title">Order Summary</h3>
+          {cartItems.length > 0 ? (
+            cartItems.map((item, index) => (
+              <p key={index}>
+                {item.name} - ₹{item.finalPrice} x {item.quantity}
+              </p>
+            ))
+          ) : (
+            <p>No items in cart</p>
+          )}
+          <h3>Total: {displayTotalPrice}</h3>
+
+          <button type="submit" className="btn-submit">Place Order</button>
+        </form>
+      </div>
+      <style>{`
+  .checkout-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #000; /* Black background */
+    font-family: 'Poppins', sans-serif;
+  }
+
+  .checkout-container {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 40px;
+    border-radius: 16px;
+    backdrop-filter: blur(15px);
+    box-shadow: 0 12px 30px rgba(255, 0, 0, 0.2);
+    width: 100%;
+    max-width: 600px;
+    text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    animation: fadeIn 0.8s ease-in-out, floatUp 1.5s infinite alternate;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-20px);
     }
-
-    /* Header Styling */
-    .checkout-container h2 {
-        text-align: center;
-        font-size: 36px;
-        color: #ff4b2b;
-        margin-bottom: 40px;
-        font-weight: 700;
-        text-transform: uppercase;
+    to {
+      opacity: 1;
+      transform: translateY(0);
     }
+  }
 
-    /* Checkout Sections */
-    .checkout-section {
-        background: rgba(255, 255, 255, 0.1);
-        padding: 25px;
-        border-radius: 10px;
-        box-shadow: 0 4px 10px rgba(255, 0, 0, 0.1);
-        margin-bottom: 30px;
-        animation: fadeIn 1s ease-in-out;
+  @keyframes floatUp {
+    from {
+      transform: translateY(0);
     }
-
-    .checkout-section h3 {
-        font-size: 24px;
-        color: #ff4b2b;
-        margin-bottom: 20px;
-        font-weight: 600;
+    to {
+      transform: translateY(-8px);
     }
+  }
 
-    /* Payment Options */
-    .payment-option {
-        display: flex;
-        align-items: center;
-        gap: 15px;
-        font-size: 18px;
-        margin-bottom: 15px;
-        transition: transform 0.2s ease;
-    }
+  .checkout-header {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #ff4b2b;
+    margin-bottom: 20px;
+    animation: fadeIn 1s ease-in-out;
+  }
 
-    .payment-option:hover {
-        transform: scale(1.02);
-    }
+  .form-group {
+    margin-bottom: 20px;
+    text-align: left;
+  }
 
-    .payment-option input {
-        transform: scale(1.3);
-        margin: 0;
-    }
+  .form-group label {
+    display: block;
+    font-size: 14px;
+    color: white;
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
 
-    .payment-option label {
-        color: #ddd;
-        font-weight: 500;
-    }
+  .input-field {
+    width: 100%;
+    padding: 12px;
+    border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    font-size: 16px;
+    transition: border-color 0.3s ease-in-out;
+  }
 
-    /* Order Summary */
-    .order-details {
-        font-size: 18px;
-        color: #ddd;
-        margin-bottom: 15px;
-    }
+  .input-field:focus {
+    border-color: #ff4b2b;
+    outline: none;
+  }
 
-    .order-details span {
-        font-weight: 700;
-        color: white;
-    }
+  .order-summary-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    color: white;
+  }
 
-    .order-details p {
-        margin: 10px 0;
-    }
+  .btn-submit {
+    width: 100%;
+    padding: 12px;
+    background: linear-gradient(90deg, #ff4b2b, #ff416c);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.3s ease, background 0.3s ease;
+  }
 
-    /* Shipping Information */
-    .shipping-info input {
-        width: 100%;
-        padding: 12px;
-        border-radius: 8px;
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        background: rgba(255, 255, 255, 0.1);
-        color: white;
-        font-size: 16px;
-        transition: border-color 0.3s ease-in-out, transform 0.2s ease;
-    }
-
-    .shipping-info input:focus {
-        border-color: #ff4b2b;
-        outline: none;
-        transform: scale(1.02);
-    }
-
-    /* Checkout Button */
-    .checkout-actions {
-        text-align: center;
-    }
-
-    .btn-submit {
-        padding: 14px 35px;
-        font-size: 20px;
-        font-weight: bold;
-        color: white;
-        background: linear-gradient(90deg, #ff4b2b, #ff416c);
-        border: none;
-        border-radius: 8px;
-        cursor: pointer;
-        transition: transform 0.3s ease, background 0.3s ease;
-        width: 100%;
-        max-width: 300px;
-    }
-
-    .btn-submit:hover {
-        transform: scale(1.05);
-        background: linear-gradient(90deg, #d84315, #d32f2f);
-    }
-
-    /* Mobile Responsiveness */
-    @media (max-width: 768px) {
-        .checkout-container {
-            padding: 20px;
-        }
-
-        .checkout-section {
-            padding: 20px;
-        }
-
-        .btn-submit {
-            width: 100%;
-            max-width: none;
-        }
-    }
-
-    /* Login Modal Styling */
-    .login-modal {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        background: rgba(0, 0, 0, 0.6);
-        animation: fadeIn 0.3s ease-in-out;
-    }
-
-    .modal-content {
-        background: #222;
-        padding: 25px;
-        border-radius: 10px;
-        text-align: center;
-        color: white;
-        box-shadow: 0 5px 15px rgba(255, 0, 0, 0.2);
-    }
-
-    .btn-login {
-        padding: 12px 25px;
-        font-size: 18px;
-        background: linear-gradient(90deg, #ff4b2b, #ff416c);
-        color: white;
-        border: none;
-        border-radius: 8px;
-        cursor: pointer;
-        transition: transform 0.3s ease;
-    }
-
-    .btn-login:hover {
-        transform: scale(1.05);
-        background: linear-gradient(90deg, #d84315, #d32f2f);
-    }
-  `}
-</style>
-
-        </div>
-    );
+  .btn-submit:hover {
+    transform: scale(1.05);
+    background: linear-gradient(90deg, #d84315, #d32f2f);
+  }
+`}</style>
+    </div>
+  );
 };
 
 export default Checkout;

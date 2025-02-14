@@ -1,32 +1,41 @@
 .quantity_box {
     display: inline-flex;
     align-items: center;
-    @include bordered(1px, #444);
-    border-radius: 3px;
+    border: 1px solid var(--text-muted); /* Subtle border color */
+    border-radius: 6px; /* Slightly rounded corners for a modern look */
     user-select: none;
     overflow: hidden;
+    background-color: var(--bg-color-2); /* Neutral background for consistency */
 
     button {
-        @include dimension(3.125rem, 2.25rem);
-        background-color: var(--bg-color-3);
-        @include transition(color, 0.2s);
+        width: 3.125rem; /* Adjusted for proportional sizing */
+        height: 2.25rem;
+        background-color: var(--bg-color-3); /* Background for buttons */
+        color: var(--text-muted); /* Initial text color */
+        font-size: 1rem; /* Button text size */
+        transition: all 0.3s ease; /* Smooth hover and focus transitions */
 
         &:hover {
-            color: #eee;
+            color: var(--main-color); /* Accent color on hover */
         }
 
         &[disabled] {
             cursor: not-allowed;
-            color: var(--text-muted);
+            color: var(--text-muted); /* Muted color for disabled state */
+            opacity: 0.6; /* Reduced opacity for visual distinction */
         }
     }
 }
 
 .quantity_count {
-    @include dimension(3.75rem, 2.25rem);
-    color: red;
+    width: 3.75rem; /* Slightly larger for better usability */
+    height: 2.25rem;
     font-size: 1.4rem;
-    line-height: 2.25rem;
     font-weight: bold;
+    line-height: 2.25rem;
     text-align: center;
+    background-color: var(--bg-color); /* Consistent background */
+    color: var(--main-color); /* Primary color for text */
+    border-left: 1px solid var(--text-muted); /* Divider between buttons and count */
+    border-right: 1px solid var(--text-muted);
 }

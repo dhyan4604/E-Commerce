@@ -19,18 +19,39 @@
 
 .search_box {
     display: flex;
-    gap: 0.4rem;
+    gap: 0.5rem; /* Slightly increased gap for spacing */
 
     .input_field {
         background-color: var(--bg-color);
+        padding: 0.8rem 1rem; /* Added padding for better usability */
+        border-radius: 6px; /* Rounded corners for a modern look */
+        border: 1px solid var(--text-muted); /* Subtle border for clarity */
+        color: var(--text-color); /* Ensures readability */
+        @include transition(all, 0.3s, ease);
+
+        &:focus {
+            outline: none;
+            border-color: var(--main-color); /* Highlighted border on focus */
+        }
     }
 
     .btn {
         font-size: 1.5rem;
+        padding: 0.6rem 1rem; /* Balanced padding for buttons */
+        background-color: var(--main-color); /* Accent color */
+        color: #fff; /* White text for contrast */
+        border-radius: 6px;
+        cursor: pointer;
+        @include transition(all, 0.3s, ease);
+
+        &:hover {
+            background-color: var(--main-color-hover); /* Darker shade on hover */
+        }
 
         &[disabled] {
             pointer-events: none;
             opacity: 0.7;
+            background-color: var(--text-muted); /* Disabled state color */
         }
     }
 }
@@ -45,14 +66,18 @@
     overflow-y: auto;
     padding: 1rem;
     border: 1px solid var(--text-muted);
+    border-radius: 6px; /* Rounded corners for modern style */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
     scrollbar-width: none;
 
     a {
         cursor: pointer;
+        color: var(--text-color); /* Ensures readability */
+        font-size: 0.9rem;
         @include transition(color, 0.3s);
 
         &:hover {
-            color: var(--main-color-2);
+            color: var(--main-color-2); /* Highlight color on hover */
         }
     }
 

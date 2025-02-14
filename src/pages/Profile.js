@@ -40,11 +40,10 @@ const Profile = ({ user, setUser }) => { // setUser added
 
   const handleLogout = () => {
     localStorage.removeItem("authToken");
-  
     navigate("/login"); // Redirect to login page
     window.location.reload(); // Refresh the page to reflect the logged-out state
   };
-  
+
   const handleImageUpload = async (event) => {
     const file = event.target.files[0];
     if (file) {
@@ -142,6 +141,7 @@ const Profile = ({ user, setUser }) => { // setUser added
                   value={address}
                   onChange={(e) => setAddress(e.target.value)}
                   placeholder="Enter delivery address"
+                  className="input-field"
                 />
               </div>
 
@@ -153,6 +153,7 @@ const Profile = ({ user, setUser }) => { // setUser added
                   value={phoneNumber}
                   onChange={(e) => setPhoneNumber(e.target.value)}
                   placeholder="Enter your phone number"
+                  className="input-field"
                 />
               </div>
 
@@ -164,6 +165,7 @@ const Profile = ({ user, setUser }) => { // setUser added
                   value={shippingAddress}
                   onChange={(e) => setShippingAddress(e.target.value)}
                   placeholder="Enter your shipping address"
+                  className="input-field"
                 />
               </div>
 
@@ -177,7 +179,7 @@ const Profile = ({ user, setUser }) => { // setUser added
               {orderHistory.length > 0 ? (
                 <ul>
                   {orderHistory.map((order, index) => (
-                    <li key={index}>
+                    <li key={index} className="order-item">
                       Order #{order.id} - {order.date} - {order.status}
                     </li>
                   ))}
@@ -197,27 +199,27 @@ const Profile = ({ user, setUser }) => { // setUser added
           </p>
         )}
       </div>
-
       <style>
   {`
     /* Profile Page - Modern & Elegant Design */
     .profile-page {
       display: flex;
       justify-content: center;
-      align-items: center;
-      height: 100vh;
+      align-items: flex-start; /* Align at the top */
+      min-height: 100vh;
       background: #000; /* Black background */
       font-family: 'Poppins', sans-serif;
+      padding: 60px 20px; /* Increased top spacing for margin */
     }
 
     .profile-container {
       background: rgba(255, 255, 255, 0.1);
-      padding: 40px;
+      padding: 30px 20px; /* Decreased padding */
       border-radius: 12px;
       backdrop-filter: blur(10px);
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
       width: 100%;
-      max-width: 600px;
+      max-width: 500px; /* Decreased box width */
       text-align: center;
       border: 1px solid rgba(255, 255, 255, 0.2);
       animation: fadeIn 0.8s ease-in-out;
@@ -228,29 +230,30 @@ const Profile = ({ user, setUser }) => { // setUser added
       to { opacity: 1; transform: translateY(0); }
     }
 
+    /* Remaining styles unchanged */
     .profile-header {
       display: flex;
       align-items: center;
       justify-content: center;
       flex-direction: column;
-      gap: 15px;
-      margin-bottom: 25px;
+      gap: 20px; /* Increased spacing */
+      margin-bottom: 30px;
     }
 
     .profile-info h2 {
-      font-size: 26px;
+      font-size: 28px;
       margin: 0;
       color: white; /* Header text color updated */
     }
 
     .profile-info p {
-      font-size: 15px;
+      font-size: 16px;
       color: #c5c6c7;
     }
 
     .profile-image {
-      width: 130px;
-      height: 130px;
+      width: 140px;
+      height: 140px;
       border-radius: 50%;
       overflow: hidden;
       background-color: #222;
@@ -270,6 +273,7 @@ const Profile = ({ user, setUser }) => { // setUser added
       height: 100%;
       object-fit: cover;
     }
+
 
     .upload-btn-container {
       margin-top: 10px;
@@ -310,7 +314,7 @@ const Profile = ({ user, setUser }) => { // setUser added
       display: block;
       font-size: 16px;
       color: white;
-      margin-bottom: 5px;
+      margin-bottom: 8px;
     }
 
     .form-group input {
@@ -331,7 +335,7 @@ const Profile = ({ user, setUser }) => { // setUser added
 
     .submit-btn {
       width: 100%;
-      padding: 12px;
+      padding: 14px;
       background: linear-gradient(90deg, #ff4b2b, #ff416c);
       color: white;
       border: none;
@@ -348,7 +352,7 @@ const Profile = ({ user, setUser }) => { // setUser added
     }
 
     .order-history-section {
-      margin-top: 30px;
+      margin-top: 40px;
       text-align: left;
       animation: fadeIn 1.2s ease-in-out;
     }
@@ -368,7 +372,7 @@ const Profile = ({ user, setUser }) => { // setUser added
     .order-history-section li {
       font-size: 16px;
       margin-bottom: 10px;
-      padding: 8px;
+      padding: 12px;
       border-radius: 5px;
       background: rgba(255, 255, 255, 0.1);
       transition: transform 0.3s, background 0.3s;
@@ -382,7 +386,7 @@ const Profile = ({ user, setUser }) => { // setUser added
 
     .logout-btn {
       width: 100%;
-      padding: 12px;
+      padding: 14px;
       margin-top: 20px;
       background: linear-gradient(90deg, #ff4b2b, #ff416c);
       color: white;
@@ -406,7 +410,7 @@ const Profile = ({ user, setUser }) => { // setUser added
     }
 
     a {
-      color: #ff4b2b;
+      color: rgb(169, 175, 195);
       text-decoration: none;
       font-weight: bold;
       transition: color 0.3s ease;
