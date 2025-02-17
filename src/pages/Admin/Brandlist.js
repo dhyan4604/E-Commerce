@@ -1,6 +1,6 @@
 import React from 'react';
 import { Table } from 'antd';
-
+import Sidebar from './Sidebar'; 
 
 const columns = [
   {
@@ -103,6 +103,7 @@ const Brandlist = () => {
       </style>
 
       <div className="brandlist-page">
+      <Sidebar /> 
         <h3 className="mb-4 title">Brands</h3>
         <div className="brandlist-table">
           <Table 

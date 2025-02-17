@@ -10,7 +10,7 @@ const OrderConfirmation = () => {
 
             <div className="thank-you-message">
                 <p>Thank you for your order! Your order has been placed successfully.</p>
-                <p className="delivery-time">Your items will be delivered within <strong>3-5 business days</strong>.</p>
+                <p className="delivery-time">Your items will be delivered within <strong>8-10 business days</strong>.</p>
             </div>
 
             <Link to="/all-products" className="btn-back">
@@ -52,7 +52,7 @@ const OrderConfirmation = () => {
     .thank-you-message {
         font-size: 26px;
         text-align: center;
-        color: #ff4b2b;
+        color:rgb(159, 174, 190);
         font-weight: bold;
         margin-bottom: 20px;
         animation: fadeIn 1.2s ease-in-out;

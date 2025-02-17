@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Sidebar from './Sidebar';
 
 
 
@@ -6,6 +7,7 @@ const AddProduct = () => {
   const [productData, setProductData] = useState({
     name: '',
     price: '',
+    brand: '',
     category: '',
     description: '',
     image: null,
@@ -134,6 +136,7 @@ const AddProduct = () => {
       </style>
 
       <div className="add-product-page">
+      <Sidebar />
         <form className="add-product-form" onSubmit={handleSubmit}>
           <h1>Add Product</h1>
           <div className="form-group">
@@ -152,6 +155,16 @@ const AddProduct = () => {
               type="number"
               name="price"
               value={productData.price}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label>Brand:</label>
+            <input
+              type="text"
+              name="brand"
+              value={productData.brand}
               onChange={handleChange}
               required
             />
