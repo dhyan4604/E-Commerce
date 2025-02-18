@@ -29,6 +29,8 @@ const Customers = () => {
   background-color: #000; /* Black background */
   color: white;
   min-height: 100vh;
+  display: flex;
+  flex-direction: column; /* Ensure content stacks vertically on smaller screens */
 }
 
 /* Customers Page Title */
@@ -119,6 +121,73 @@ const Customers = () => {
     transform: translateY(0);
   }
 }
+
+/* Responsive Styles */
+@media (max-width: 1024px) {
+  .customers-page {
+    padding: 15px;
+  }
+
+  .customers-page .title {
+    font-size: 24px; /* Smaller title on medium screens */
+  }
+
+  .ant-table-thead > tr > th,
+  .ant-table-tbody > tr > td {
+    font-size: 14px; /* Slightly smaller table text */
+  }
+
+  .ant-pagination-item {
+    font-size: 14px; /* Smaller pagination text */
+  }
+}
+
+@media (max-width: 768px) {
+  .customers-page {
+    padding: 10px;
+  }
+
+  .customers-page .title {
+    font-size: 20px; /* Smaller title on small screens */
+  }
+
+  .ant-table-thead > tr > th,
+  .ant-table-tbody > tr > td {
+    font-size: 12px; /* Smaller table text */
+  }
+
+  .ant-pagination-item {
+    font-size: 12px; /* Smaller pagination text */
+  }
+
+  .ant-pagination {
+    margin-top: 10px; /* Reduced margin on small screens */
+  }
+}
+
+@media (max-width: 480px) {
+  .customers-page {
+    padding: 10px;
+  }
+
+  .customers-page .title {
+    font-size: 18px; /* Even smaller title for mobile screens */
+  }
+
+  .ant-table-thead > tr > th,
+  .ant-table-tbody > tr > td {
+    font-size: 10px; /* Smaller table text */
+  }
+
+  .ant-pagination-item {
+    font-size: 10px; /* Smaller pagination text */
+  }
+
+  .ant-pagination {
+    margin-top: 8px; /* Reduced margin for pagination */
+  }
+}
+
 
         `}
       </style>

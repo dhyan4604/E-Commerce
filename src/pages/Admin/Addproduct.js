@@ -38,100 +38,189 @@ const AddProduct = () => {
     <div>
       <style>
         {`
-          .add-product-page {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: #000; /* Black background */
-            font-family: 'Poppins', sans-serif;
-          }
-          .add-product-form {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 35px;
-            border-radius: 10px;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 10px 30px rgba(255, 0, 0, 0.2);
-            width: 100%;
-            max-width: 500px;
-            text-align: center;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            animation: fadeIn 0.8s ease-in-out, floatUp 1.5s infinite alternate;
-          }
-          @keyframes fadeIn {
-            from {
-              opacity: 0;
-              transform: translateY(-20px);
-            }
-            to {
-              opacity: 1;
-              transform: translateY(0);
-            }
-          }
-          @keyframes floatUp {
-            from {
-              transform: translateY(0);
-            }
-            to {
-              transform: translateY(-8px);
-            }
-          }
-          .add-product-form h1 {
-            text-align: center;
-            margin-bottom: 20px;
-            color: white;
-            font-size: 24px;
-            font-weight: bold;
-            animation: fadeIn 1s ease-in-out;
-          }
-          .form-group {
-            margin-bottom: 20px;
-            text-align: left;
-          }
-          label {
-            display: block;
-            font-size: 14px;
-            color: white;
-            font-weight: bold;
-            margin-bottom: 5px;
-          }
-          input,
-          textarea,
-          select {
-            width: 100%;
-            padding: 12px;
-            border-radius: 6px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-            font-size: 16px;
-            transition: border-color 0.3s ease-in-out;
-          }
-          input:focus,
-          textarea:focus,
-          select:focus {
-            border-color: #ff4b2b;
-            outline: none;
-          }
-          textarea {
-            resize: none;
-          }
-          .add-product-btn {
-            width: 100%;
-            padding: 12px;
-            background: linear-gradient(90deg, #ff4b2b, #ff416c);
-            color: white;
-            border: none;
-            border-radius: 6px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: transform 0.3s ease, background 0.3s ease;
-          }
-          .add-product-btn:hover {
-            transform: scale(1.05);
-            background: linear-gradient(90deg, #d84315, #d32f2f);
-          }
+         /* Add Product Page */
+.add-product-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #000; /* Black background */
+  font-family: 'Poppins', sans-serif;
+  padding: 20px; /* Added padding for mobile view */
+}
+
+.add-product-form {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 35px;
+  border-radius: 10px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 10px 30px rgba(255, 0, 0, 0.2);
+  width: 100%;
+  max-width: 500px;
+  text-align: center;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  animation: fadeIn 0.8s ease-in-out, floatUp 1.5s infinite alternate;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes floatUp {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-8px);
+  }
+}
+
+.add-product-form h1 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: white;
+  font-size: 24px;
+  font-weight: bold;
+  animation: fadeIn 1s ease-in-out;
+}
+
+.form-group {
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+label {
+  display: block;
+  font-size: 14px;
+  color: white;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+input,
+textarea,
+select {
+  width: 100%;
+  padding: 12px;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  font-size: 16px;
+  transition: border-color 0.3s ease-in-out;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: #ff4b2b;
+  outline: none;
+}
+
+textarea {
+  resize: none;
+}
+
+.add-product-btn {
+  width: 100%;
+  padding: 12px;
+  background: linear-gradient(90deg, #ff4b2b, #ff416c);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.3s ease, background 0.3s ease;
+}
+
+.add-product-btn:hover {
+  transform: scale(1.05);
+  background: linear-gradient(90deg, #d84315, #d32f2f);
+}
+
+/* Responsive Styles */
+@media (max-width: 1024px) {
+  .add-product-page {
+    padding: 15px;
+  }
+
+  .add-product-form {
+    max-width: 450px; /* Slightly smaller form on medium screens */
+  }
+
+  .add-product-form h1 {
+    font-size: 22px; /* Smaller title on medium screens */
+  }
+
+  input,
+  textarea,
+  select {
+    font-size: 14px; /* Slightly smaller input text */
+  }
+
+  .add-product-btn {
+    font-size: 14px; /* Smaller button text */
+  }
+}
+
+@media (max-width: 768px) {
+  .add-product-page {
+    padding: 10px;
+  }
+
+  .add-product-form {
+    max-width: 100%; /* Full-width form on small screens */
+    padding: 25px;
+  }
+
+  .add-product-form h1 {
+    font-size: 20px; /* Smaller title on small screens */
+  }
+
+  input,
+  textarea,
+  select {
+    font-size: 12px; /* Smaller input text */
+  }
+
+  .add-product-btn {
+    font-size: 14px; /* Smaller button text */
+  }
+}
+
+@media (max-width: 480px) {
+  .add-product-page {
+    padding: 10px;
+  }
+
+  .add-product-form {
+    max-width: 100%; /* Full-width form on mobile screens */
+    padding: 20px;
+  }
+
+  .add-product-form h1 {
+    font-size: 18px; /* Smaller title for mobile screens */
+  }
+
+  input,
+  textarea,
+  select {
+    font-size: 12px; /* Smaller input text */
+  }
+
+  .add-product-btn {
+    font-size: 12px; /* Smaller button text */
+  }
+}
+
         `}
       </style>
 
