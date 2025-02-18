@@ -68,17 +68,19 @@ const Cart = () => {
                                 </div>
 
                                 {/* Pass data using state */}
-                                <Link 
-                                    to="/checkout" 
-                                    state={{ 
-                                        displayCartTotal, 
-                                        displayCartDiscount, 
-                                        displayTotalAmount 
-                                    }} 
+                                <Link
+                                    to="/checkout"
+                                    state={{
+                                        cartItems, // Pass the cart items
+                                        displayCartTotal,
+                                        displayCartDiscount,
+                                        displayTotalAmount
+                                    }}
                                     className="btn"
                                 >
                                     Checkout
                                 </Link>
+
                             </div>
                         </div>
                     </div>
