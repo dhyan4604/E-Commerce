@@ -2,7 +2,7 @@ import React from 'react';
 import { BsArrowDownRight } from 'react-icons/bs';
 import { Column } from '@ant-design/plots';
 import { Table } from 'antd';
-import Sidebar from './Sidebar'; // Import Sidebar component
+import Header from './Header';
 
 const columns = [
   {
@@ -352,7 +352,7 @@ const Dashboard = () => {
 </style>
 
       <div className="dashboard-container">
-        <Sidebar /> {/* Sidebar added here */}
+        <Header /> {/* Sidebar added here */}
         <div className="main-content">
           <h3 className="title">Dashboard</h3>
           <div className="card-container">

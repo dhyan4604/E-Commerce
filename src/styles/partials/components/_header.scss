@@ -1,10 +1,10 @@
 #header {
-    position: relative;
+    position: fixed; /* Change to fixed position */
     top: 0;
     left: 0;
     z-index: 99;
     width: 100%;
-    padding: 0.8rem 0.8rem;
+    padding: 1rem 1.5rem; /* Adjust padding for better sizing */
     background: linear-gradient(180deg, rgba(0, 0, 0, 0.8), transparent);
     transition: background-color 0.3s ease, box-shadow 0.3s ease;
 
@@ -34,12 +34,12 @@
 .nav_actions {
     display: flex;
     align-items: center;
-    gap: 3rem;
+    gap: 2rem; /* Adjust gap for better spacing */
     font-size: 1.5rem;
     color: #eee;
 
     @media (max-width: 576px) {
-        gap: 2rem;
+        gap: 1.5rem; /* Adjust gap for smaller screens */
         font-size: 1.2rem;
     }
 }

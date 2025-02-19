@@ -6,13 +6,13 @@ import BrandList from '../pages/Admin/Brandlist';
 import Customers from '../pages/Admin/Customers';
 import Orders from '../pages/Admin/Orders';
 import ProductList from '../pages/Admin/Productlist';
-import Sidebar from '../pages/Admin/Sidebar';
+import Header from '../pages/Admin/Header';
 
 
 const AdminRoutes = () => {
     return (
         <Routes>
-            <Route path="sidebar" element={<Sidebar />} />
+            <Route path="header" element={<Header />} />
             <Route path="dashboard" element={<Dashboard />} />
             <Route path="add-product" element={<AddProduct />} />
             <Route path="brandlist" element={<BrandList />} />

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Table } from 'antd';
-import Sidebar from './Sidebar'; 
+import Header from './Header';
 
 const columns = [
   {
@@ -185,7 +185,7 @@ const Productlist = () => {
 </style>
 
       <div className="productlist-container">
-      <Sidebar /> 
+      <Header /> 
         <h3 className="mb-4 title">Products</h3>
         <div>
           <Table columns={columns} dataSource={[]} />

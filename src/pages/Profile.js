@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-const Profile = ({ user, setUser }) => { // setUser added
+const Profile = ({ user, setUser }) => {
   const navigate = useNavigate();
   const [profile, setProfile] = useState(null);
   const [image, setImage] = useState(null);
@@ -18,30 +18,35 @@ const Profile = ({ user, setUser }) => { // setUser added
       if (token) {
         try {
           setIsLoading(true);
-          const response = await axios.get("http://localhost:5000/api/profile", {
+          const profileResponse = await axios.get("http://localhost:5000/api/profile", {
             headers: { Authorization: `Bearer ${token}` },
           });
-          setProfile(response.data);
-          setImage(response.data.profileImage || null);
-          setAddress(response.data.address || "");
-          setPhoneNumber(response.data.phoneNumber || "");
-          setShippingAddress(response.data.shippingAddress || "");
-          setOrderHistory(response.data.orderHistory || []);
-          setUser(response.data); // Added setUser
+          const ordersResponse = await axios.get("http://localhost:5000/api/orders", {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+
+          setProfile(profileResponse.data);
+          setImage(profileResponse.data.profileImage || null);
+          setAddress(profileResponse.data.address || "");
+          setPhoneNumber(profileResponse.data.phoneNumber || "");
+          setShippingAddress(profileResponse.data.shippingAddress || "");
+          setOrderHistory(ordersResponse.data); // Update order history state
+          setUser(profileResponse.data);
         } catch (error) {
-          console.error("Error fetching profile", error);
+          console.error("Error fetching profile or orders", error);
         } finally {
           setIsLoading(false);
         }
       }
     };
+
     fetchProfile();
-  }, [user, setUser]); // Added setUser dependency
+  }, [user, setUser]);
 
   const handleLogout = () => {
     localStorage.removeItem("authToken");
-    navigate("/login"); // Redirect to login page
-    window.location.reload(); // Refresh the page to reflect the logged-out state
+    navigate("/login");
+    window.location.reload();
   };
 
   const handleImageUpload = async (event) => {
@@ -178,9 +183,12 @@ const Profile = ({ user, setUser }) => { // setUser added
               <h3>Order History</h3>
               {orderHistory.length > 0 ? (
                 <ul>
-                  {orderHistory.map((order, index) => (
-                    <li key={index} className="order-item">
-                      Order #{order.id} - {order.date} - {order.status}
+                  {orderHistory.map((order) => (
+                    <li key={order._id} className="order-item">
+                      <strong>Order ID:</strong> {order._id} <br />
+                      <strong>Date:</strong> {new Date(order.createdAt).toLocaleDateString()} <br />
+                      <strong>Status: Order Confirmed</strong> {order.status} <br />
+                      <strong>Total:</strong> {order.totalAmount}
                     </li>
                   ))}
                 </ul>
@@ -188,6 +196,7 @@ const Profile = ({ user, setUser }) => { // setUser added
                 <p>No orders found.</p>
               )}
             </div>
+
 
             <button className="logout-btn" onClick={handleLogout}>
               Logout
@@ -200,7 +209,7 @@ const Profile = ({ user, setUser }) => { // setUser added
         )}
       </div>
       <style>
-  {`
+        {`
     /* Profile Page - Modern & Elegant Design */
     .profile-page {
       display: flex;
@@ -210,6 +219,8 @@ const Profile = ({ user, setUser }) => { // setUser added
       background: #000; /* Black background */
       font-family: 'Poppins', sans-serif;
       padding: 60px 20px; /* Increased top spacing for margin */
+      margin-top: 60px; /* Space from header */
+      margin-bottom: 60px; /* Space from footer */
     }
 
     .profile-container {
@@ -273,7 +284,6 @@ const Profile = ({ user, setUser }) => { // setUser added
       height: 100%;
       object-fit: cover;
     }
-
 
     .upload-btn-container {
       margin-top: 10px;
@@ -419,10 +429,86 @@ const Profile = ({ user, setUser }) => { // setUser added
     a:hover {
       color: #ff1a1a;
     }
+
+    @media (max-width: 768px) {
+      .profile-container {
+        padding: 20px 15px;
+        max-width: 90%;
+      }
+
+      .profile-info h2 {
+        font-size: 24px;
+      }
+
+      .profile-info p {
+        font-size: 14px;
+      }
+
+      .form-group label {
+        font-size: 14px;
+      }
+
+      .form-group input {
+        padding: 10px;
+        font-size: 14px;
+      }
+
+      .submit-btn,
+      .logout-btn {
+        padding: 12px;
+        font-size: 14px;
+      }
+
+      .order-history-section h3 {
+        font-size: 18px;
+      }
+
+      .order-history-section li {
+        font-size: 14px;
+        padding: 10px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .profile-container {
+        padding: 15px 10px;
+        max-width: 100%;
+      }
+
+      .profile-info h2 {
+        font-size: 20px;
+      }
+
+      .profile-info p {
+        font-size: 12px;
+      }
+
+      .form-group label {
+        font-size: 12px;
+      }
+
+      .form-group input {
+        padding: 8px;
+        font-size: 12px;
+      }
+
+      .submit-btn,
+      .logout-btn {
+        padding: 10px;
+        font-size: 12px;
+      }
+
+      .order-history-section h3 {
+        font-size: 16px;
+      }
+
+      .order-history-section li {
+        font-size: 12px;
+        padding: 8px;
+      }
+    }
   `}
-</style>
-
-
+      </style>
     </div>
   );
 };

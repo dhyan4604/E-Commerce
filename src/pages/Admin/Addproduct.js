@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Sidebar from './Sidebar';
+import Header from './Header';
 
 
 
@@ -225,7 +225,7 @@ textarea {
       </style>
 
       <div className="add-product-page">
-      <Sidebar />
+      <Header />
         <form className="add-product-form" onSubmit={handleSubmit}>
           <h1>Add Product</h1>
           <div className="form-group">

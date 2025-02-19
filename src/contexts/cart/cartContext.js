@@ -43,13 +43,20 @@ const CartProvider = ({ children }) => {
         });
     };
 
+    const clearCart = () => {
+        return dispatch({
+            type: 'CLEAR_CART'
+        });
+    };
+
     // Context values
     const values = {
         ...state,
         addItem,
         removeItem,
         incrementItem,
-        decrementItem
+        decrementItem,
+        clearCart // Add clearCart to the context values
     };
 
     return (
@@ -58,7 +65,6 @@ const CartProvider = ({ children }) => {
         </cartContext.Provider>
     );
 };
-
 
 export default cartContext;
 export { CartProvider };

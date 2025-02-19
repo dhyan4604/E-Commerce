@@ -1,6 +1,5 @@
 const cartReducer = (state, action) => {
     switch (action.type) {
-
         case 'ADD_TO_CART':
             const newItemId = action.payload.item.id;
             const itemExist = state.cartItems.some(item => item.id === newItemId);
@@ -26,13 +25,11 @@ const cartReducer = (state, action) => {
                 cartItems: updatedCartItems
             };
 
-
         case 'REMOVE_FROM_CART':
             return {
                 ...state,
                 cartItems: state.cartItems.filter(item => item.id !== action.payload.itemId)
             };
-
 
         case 'INCREMENT_ITEM':
             return {
@@ -48,7 +45,6 @@ const cartReducer = (state, action) => {
                 })
             };
 
-
         case 'DECREMENT_ITEM':
             return {
                 ...state,
@@ -63,6 +59,11 @@ const cartReducer = (state, action) => {
                 }).filter(item => item.quantity !== 0)
             };
 
+        case 'CLEAR_CART':
+            return {
+                ...state,
+                cartItems: [] // Clear all items from the cart
+            };
 
         default:
             return state;

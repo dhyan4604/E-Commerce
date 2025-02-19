@@ -47,6 +47,20 @@ const Cart = () => {
                                 <h3>
                                     Order Summary ({cartQuantity} {cartQuantity > 1 ? 'items' : 'item'})
                                 </h3>
+                                
+                                {/* Product Names Section */}
+                                <div className="separator"></div>
+                                    <div className="product_names">
+                                        <b>Products:</b>
+                                        <ul>
+                                            {cartItems.map((item) => (
+                                                <li key={item.id}>
+                                                    {item.title} x {item.quantity}
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </div>
+
                                 <div className="order_summary_details">
                                     <div className="price">
                                         <span>Original Price</span>
@@ -60,6 +74,9 @@ const Cart = () => {
                                         <span>Delivery</span>
                                         <b>Free</b>
                                     </div>
+
+                                    
+
                                     <div className="separator"></div>
                                     <div className="total_price">
                                         <b><small>Total Price</small></b>

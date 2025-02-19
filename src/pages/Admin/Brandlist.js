@@ -1,6 +1,6 @@
 import React from 'react';
 import { Table } from 'antd';
-import Sidebar from './Sidebar'; 
+import Header from './Header';
 
 const columns = [
   {
@@ -192,7 +192,7 @@ const Brandlist = () => {
       </style>
 
       <div className="brandlist-page">
-      <Sidebar /> 
+      <Header /> 
         <h3 className="mb-4 title">Brands</h3>
         <div className="brandlist-table">
           <Table 
