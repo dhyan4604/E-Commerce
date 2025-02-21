@@ -1,21 +1,21 @@
 import React from 'react';
-import { Table } from 'antd';
+// import { Table } from 'antd';
 import Header from './Header';
 
-const columns = [
-  {
-    title: 'SNo',
-    dataIndex: 'key',
-  },
-  {
-    title: 'Brand Name',
-    dataIndex: 'name',
-  },
-  {
-    title: 'Status',
-    dataIndex: 'status',
-  },
-];
+// const columns = [
+//   {
+//     title: 'SNo',
+//     dataIndex: 'key',
+//   },
+//   {
+//     title: 'Brand Name',
+//     dataIndex: 'name',
+//   },
+//   {
+//     title: 'Status',
+//     dataIndex: 'status',
+//   },
+// ];
 
 const Brandlist = () => {
   return (
@@ -31,6 +31,8 @@ const Brandlist = () => {
   min-height: 100vh;
   display: flex;
   flex-direction: column; /* Stack elements on smaller screens */
+  margin-top: 60px; /* Margin to avoid content overlap with fixed header */
+  overflow-x: hidden; /* Prevent horizontal scroll */
 }
 
 /* Brandlist Page Title */
@@ -194,13 +196,7 @@ const Brandlist = () => {
       <div className="brandlist-page">
       <Header /> 
         <h3 className="mb-4 title">Brands</h3>
-        <div className="brandlist-table">
-          <Table 
-            columns={columns} 
-            dataSource={[]} 
-            pagination={{ pageSize: 5 }} 
-          />
-        </div>
+       
       </div>
     </div>
   );

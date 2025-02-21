@@ -120,6 +120,7 @@ const Signup = () => {
       height: 100vh;
       background-color: #000; /* Black background */
       font-family: 'Poppins', sans-serif;
+      margin-top: 60px;
     }
 
     .signup-box {

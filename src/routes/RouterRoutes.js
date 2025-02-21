@@ -12,6 +12,7 @@ import Signup from '../pages/Signup';
 import Profile from '../pages/Profile';
 import OrderConfirmation from '../pages/Orderconfirmation';
 import AdminRoutes from './AdminRoutes';
+import Order from '../pages/Order'; 
 
 const RouterRoutes = () => {
     useScrollRestore();
@@ -23,6 +24,7 @@ const RouterRoutes = () => {
             <Route path="/profile" element={<Profile />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
+            <Route path="/order" element={<Order />} />
             <Route path="/cart" element={<Cart />} />
             <Route path="/all-products" element={<AllProducts />} />
             <Route path="/product-details/:productId" element={<ProductDetails />} />

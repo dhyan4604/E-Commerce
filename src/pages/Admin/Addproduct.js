@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
 import Header from './Header';
 
-
-
 const AddProduct = () => {
   const [productData, setProductData] = useState({
-    name: '',
-    price: '',
     brand: '',
+    title: '',
+    info: '',
     category: '',
-    description: '',
+    type: '',
+    connectivity: '',
+    finalPrice: '',
+    originalPrice: '',
     image: null,
   });
 
@@ -28,226 +29,189 @@ const AddProduct = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Product Data:', productData);
-    alert('Product added successfully!');
+    const formData = new FormData();
+    Object.keys(productData).forEach((key) => {
+      formData.append(key, productData[key]);
+    });
+  
+    try {
+      const response = await fetch("http://localhost:5000/api/products", {
+        method: "POST",
+        body: formData,
+      });
+      const data = await response.json();
+      if (response.ok) {
+        alert("Product added successfully!");
+        setProductData({
+          brand: "",
+          title: "",
+          info: "",
+          category: "",
+          type: "",
+          connectivity: "",
+          finalPrice: "",
+          originalPrice: "",
+          image: null,
+        });
+      } else {
+        alert("Failed to add product: " + data.message);
+      }
+    } catch (error) {
+      console.error("Error adding product:", error);
+      alert("An error occurred. Please try again.");
+    }
   };
+  
 
   return (
     <div>
       <style>
-        {`
-         /* Add Product Page */
-.add-product-page {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  background-color: #000; /* Black background */
-  font-family: 'Poppins', sans-serif;
-  padding: 20px; /* Added padding for mobile view */
-}
+  {`
+    /* Add Product Page */
+    .add-product-page {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh; /* Ensures the container takes the full height of the viewport */
+      background-color: #000; /* Black background */
+      font-family: 'Poppins', sans-serif;
+      padding: 130px 10px; /* Added margin from top and bottom */
+      box-sizing: border-box; /* Ensure padding doesn't affect height */
+    }
 
-.add-product-form {
-  background: rgba(255, 255, 255, 0.1);
-  padding: 35px;
-  border-radius: 10px;
-  backdrop-filter: blur(10px);
-  box-shadow: 0 10px 30px rgba(255, 0, 0, 0.2);
-  width: 100%;
-  max-width: 500px;
-  text-align: center;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  animation: fadeIn 0.8s ease-in-out, floatUp 1.5s infinite alternate;
-}
+    .add-product-form {
+      display: grid;
+      grid-template-columns: 1fr 1fr; /* Two columns */
+      column-gap: 10px; /* Space between columns */
+      row-gap: 15px; /* Space between rows */
+      background: rgba(255, 255, 255, 0.1);
+      padding: 20px; /* Reduced padding */
+      border-radius: 8px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 10px 20px rgba(255, 0, 0, 0.2);
+      width: 100%;
+      max-width: 600px; /* Smaller width for compact layout */
+      text-align: left;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      animation: fadeIn 0.8s ease-in-out, floatUp 1.5s infinite alternate;
+    }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
+    .add-product-form h1 {
+      grid-column: span 2; /* Center heading across both columns */
+      text-align: center;
+      margin-bottom: 10px; /* Reduced margin */
+      color: white;
+      font-size: 20px; /* Smaller title size */
+      font-weight: bold;
+      animation: fadeIn 1s ease-in-out;
+    }
 
-@keyframes floatUp {
-  from {
-    transform: translateY(0);
-  }
-  to {
-    transform: translateY(-8px);
-  }
-}
+    .form-group {
+      margin-bottom: 10px; /* Reduced space between fields */
+    }
 
-.add-product-form h1 {
-  text-align: center;
-  margin-bottom: 20px;
-  color: white;
-  font-size: 24px;
-  font-weight: bold;
-  animation: fadeIn 1s ease-in-out;
-}
+    label {
+      display: block;
+      font-size: 12px; /* Smaller label text */
+      color: white;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
 
-.form-group {
-  margin-bottom: 20px;
-  text-align: left;
-}
+    input,
+    textarea,
+    select {
+      width: 100%;
+      padding: 10px; /* Reduced input padding */
+      border-radius: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      font-size: 14px; /* Smaller input text */
+      transition: border-color 0.3s ease-in-out;
+    }
 
-label {
-  display: block;
-  font-size: 14px;
-  color: white;
-  font-weight: bold;
-  margin-bottom: 5px;
-}
+    input:focus,
+    textarea:focus,
+    select:focus {
+      border-color: #ff4b2b;
+      outline: none;
+    }
 
-input,
-textarea,
-select {
-  width: 100%;
-  padding: 12px;
-  border-radius: 6px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  background: rgba(255, 255, 255, 0.1);
-  color: white;
-  font-size: 16px;
-  transition: border-color 0.3s ease-in-out;
-}
+    textarea {
+      resize: none;
+    }
 
-input:focus,
-textarea:focus,
-select:focus {
-  border-color: #ff4b2b;
-  outline: none;
-}
+    .add-product-btn {
+      grid-column: span 2; /* Stretch button across both columns */
+      padding: 10px; /* Reduced button padding */
+      background: linear-gradient(90deg, #ff4b2b, #ff416c);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 14px; /* Smaller button text */
+      font-weight: bold;
+      cursor: pointer;
+      transition: transform 0.3s ease, background 0.3s ease;
+    }
 
-textarea {
-  resize: none;
-}
+    .add-product-btn:hover {
+      transform: scale(1.05);
+      background: linear-gradient(90deg, #d84315, #d32f2f);
+    }
 
-.add-product-btn {
-  width: 100%;
-  padding: 12px;
-  background: linear-gradient(90deg, #ff4b2b, #ff416c);
-  color: white;
-  border: none;
-  border-radius: 6px;
-  font-size: 16px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: transform 0.3s ease, background 0.3s ease;
-}
+    /* Responsive Styles */
+    @media (max-width: 768px) {
+      .add-product-form {
+        grid-template-columns: 1fr; /* Single column layout on smaller screens */
+        max-width: 100%; /* Full-width form */
+        padding: 15px; /* Reduced padding */
+      }
 
-.add-product-btn:hover {
-  transform: scale(1.05);
-  background: linear-gradient(90deg, #d84315, #d32f2f);
-}
+      .add-product-form h1 {
+        font-size: 18px; /* Smaller title */
+      }
 
-/* Responsive Styles */
-@media (max-width: 1024px) {
-  .add-product-page {
-    padding: 15px;
-  }
+      input,
+      textarea,
+      select {
+        font-size: 12px; /* Smaller input text */
+      }
 
-  .add-product-form {
-    max-width: 450px; /* Slightly smaller form on medium screens */
-  }
+      .add-product-btn {
+        font-size: 12px; /* Smaller button text */
+      }
+    }
 
-  .add-product-form h1 {
-    font-size: 22px; /* Smaller title on medium screens */
-  }
+    @media (max-width: 480px) {
+      .add-product-form {
+        padding: 10px; /* Further reduced padding for mobile */
+      }
 
-  input,
-  textarea,
-  select {
-    font-size: 14px; /* Slightly smaller input text */
-  }
+      .add-product-form h1 {
+        font-size: 16px; /* Smaller title */
+      }
 
-  .add-product-btn {
-    font-size: 14px; /* Smaller button text */
-  }
-}
+      input,
+      textarea,
+      select {
+        font-size: 12px; /* Smaller input text */
+      }
 
-@media (max-width: 768px) {
-  .add-product-page {
-    padding: 10px;
-  }
+      .add-product-btn {
+        font-size: 12px; /* Smaller button text */
+      }
+    }
+  `}
+</style>
 
-  .add-product-form {
-    max-width: 100%; /* Full-width form on small screens */
-    padding: 25px;
-  }
-
-  .add-product-form h1 {
-    font-size: 20px; /* Smaller title on small screens */
-  }
-
-  input,
-  textarea,
-  select {
-    font-size: 12px; /* Smaller input text */
-  }
-
-  .add-product-btn {
-    font-size: 14px; /* Smaller button text */
-  }
-}
-
-@media (max-width: 480px) {
-  .add-product-page {
-    padding: 10px;
-  }
-
-  .add-product-form {
-    max-width: 100%; /* Full-width form on mobile screens */
-    padding: 20px;
-  }
-
-  .add-product-form h1 {
-    font-size: 18px; /* Smaller title for mobile screens */
-  }
-
-  input,
-  textarea,
-  select {
-    font-size: 12px; /* Smaller input text */
-  }
-
-  .add-product-btn {
-    font-size: 12px; /* Smaller button text */
-  }
-}
-
-        `}
-      </style>
 
       <div className="add-product-page">
-      <Header />
+        <Header />
         <form className="add-product-form" onSubmit={handleSubmit}>
           <h1>Add Product</h1>
-          <div className="form-group">
-            <label>Product Name:</label>
-            <input
-              type="text"
-              name="name"
-              value={productData.name}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div className="form-group">
-            <label>Price:</label>
-            <input
-              type="number"
-              name="price"
-              value={productData.price}
-              onChange={handleChange}
-              required
-            />
-          </div>
           <div className="form-group">
             <label>Brand:</label>
             <input
@@ -255,6 +219,26 @@ textarea {
               name="brand"
               value={productData.brand}
               onChange={handleChange}
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label>Title:</label>
+            <input
+              type="text"
+              name="title"
+              value={productData.title}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label>Info:</label>
+            <textarea
+              name="info"
+              value={productData.info}
+              onChange={handleChange}
+              rows="3" /* Reduced height of textarea */
               required
             />
           </div>
@@ -269,12 +253,42 @@ textarea {
             />
           </div>
           <div className="form-group">
-            <label>Description:</label>
-            <textarea
-              name="description"
-              value={productData.description}
+            <label>Type:</label>
+            <input
+              type="text"
+              name="type"
+              value={productData.type}
               onChange={handleChange}
-              rows="4"
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label>Connectivity:</label>
+            <input
+              type="text"
+              name="connectivity"
+              value={productData.connectivity}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label>Final Price:</label>
+            <input
+              type="number"
+              name="finalPrice"
+              value={productData.finalPrice}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label>Original Price:</label>
+            <input
+              type="number"
+              name="originalPrice"
+              value={productData.originalPrice}
+              onChange={handleChange}
               required
             />
           </div>

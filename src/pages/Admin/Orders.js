@@ -1,33 +1,7 @@
 import React from "react";
-import { Table } from "antd";
 import Header from "./Header";
 
-const columns = [
-  {
-    title: "SNo",
-    dataIndex: "key",
-  },
-  {
-    title: "Name",
-    dataIndex: "name",
-  },
-  {
-    title: "Brand Name",
-    dataIndex: "brand",
-  },
-  {
-    title: "Product Name",
-    dataIndex: "product",
-  },
-  {
-    title: "Price",
-    dataIndex: "price",
-  },
-  {
-    title: "Status",
-    dataIndex: "status",
-  },
-];
+
 
 const Orders = () => {
   return (
@@ -41,7 +15,8 @@ const Orders = () => {
             background-color: #000; /* Black background */
             color: white;
             min-height: 100vh;
-            overflow-x: hidden; /* Prevent horizontal scroll */
+           margin-top: 60px; /* Margin to avoid content overlap with fixed header */
+           overflow-x: hidden; /* Prevent horizontal scroll */
           }
 
           /* Orders Page Title */
@@ -148,9 +123,7 @@ const Orders = () => {
       <div className="orders-container">
         <Header />
         <h3 className="mb-4 title">Orders</h3>
-        <div className="orders-table">
-          <Table columns={columns} dataSource={[]} scroll={{ x: 800 }} />
-        </div>
+
       </div>
     </div>
   );

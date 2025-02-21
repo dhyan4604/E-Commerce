@@ -1,196 +1,404 @@
-import React from 'react';
-import { Table } from 'antd';
-import Header from './Header';
-
-const columns = [
-  {
-    title: 'SNo',
-    dataIndex: 'key',
-  },
-  {
-    title: 'Product Name',
-    dataIndex: 'product',
-  },
-  {
-    title: 'Price',
-    dataIndex: 'price',
-  },
-  {
-    title: 'Status',
-    dataIndex: 'status',
-  },
-];
+import React, { useEffect, useState } from "react";
+import Header from "./Header";
 
 const Productlist = () => {
+  const [products, setProducts] = useState([]);
+  const [editingProduct, setEditingProduct] = useState(null);
+  const [editedProduct, setEditedProduct] = useState({});
+
+  // Fetch products from the API
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await fetch("http://localhost:5000/api/products");
+        const data = await response.json();
+        setProducts(data);
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      }
+    };
+    fetchProducts();
+  }, []);
+
+  // Delete product
+  const deleteProduct = async (productId) => {
+    try {
+      await fetch(`http://localhost:5000/api/products/${productId}`, {
+        method: "DELETE",
+      });
+      setProducts(products.filter((product) => product._id !== productId));
+    } catch (error) {
+      console.error("Error deleting product:", error);
+    }
+  };
+
+  // Edit product
+  const handleEditClick = (product) => {
+    setEditingProduct(product._id);
+    setEditedProduct({ ...product });
+  };
+
+  const handleEditChange = (e) => {
+    const { name, value } = e.target;
+    setEditedProduct((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const saveEditedProduct = async () => {
+    try {
+      const response = await fetch(`http://localhost:5000/api/products/${editingProduct}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(editedProduct),
+      });
+      const updatedProduct = await response.json();
+      setProducts(products.map((product) => (product._id === editingProduct ? updatedProduct : product)));
+      setEditingProduct(null);
+    } catch (error) {
+      console.error("Error updating product:", error);
+    }
+  };
+
   return (
-    <div>
-     <style>
-  {`
-    /* Product List Page */
-.productlist-container {
+    <div className="productlist-container">
+      <Header />
+      <h3 className="productlist-title">Products</h3>
+      <table className="productlist-table">
+        <thead>
+          <tr>
+            <th>Brand</th>
+            <th>Title</th>
+            <th>Info</th>
+            <th>Category</th>
+            <th>Type</th>
+            <th>Connectivity</th>
+            <th>Final Price</th>
+            <th>Original Price</th>
+            <th>Image</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {products.map((product) =>
+            editingProduct === product._id ? (
+              <tr key={product._id}>
+                <td>
+                  <input
+                    type="text"
+                    name="brand"
+                    value={editedProduct.brand}
+                    onChange={handleEditChange}
+                  />
+                </td>
+                <td>
+                  <input
+                    type="text"
+                    name="title"
+                    value={editedProduct.title}
+                    onChange={handleEditChange}
+                  />
+                </td>
+                <td>
+                  <input
+                    type="text"
+                    name="info"
+                    value={editedProduct.info}
+                    onChange={handleEditChange}
+                  />
+                </td>
+                <td>
+                  <input
+                    type="text"
+                    name="category"
+                    value={editedProduct.category}
+                    onChange={handleEditChange}
+                  />
+                </td>
+                <td>
+                  <input
+                    type="text"
+                    name="type"
+                    value={editedProduct.type}
+                    onChange={handleEditChange}
+                  />
+                </td>
+                <td>
+                  <input
+                    type="text"
+                    name="connectivity"
+                    value={editedProduct.connectivity}
+                    onChange={handleEditChange}
+                  />
+                </td>
+                <td>
+                  <input
+                    type="number"
+                    name="finalPrice"
+                    value={editedProduct.finalPrice}
+                    onChange={handleEditChange}
+                  />
+                </td>
+                <td>
+                  <input
+                    type="number"
+                    name="originalPrice"
+                    value={editedProduct.originalPrice}
+                    onChange={handleEditChange}
+                  />
+                </td>
+                <td>
+                  <input
+                    type="text"
+                    name="imageUrl"
+                    value={editedProduct.imageUrl}
+                    onChange={handleEditChange}
+                  />
+                </td>
+                <td>
+                  <button onClick={saveEditedProduct}>Save</button>
+                  <button onClick={() => setEditingProduct(null)}>Cancel</button>
+                </td>
+              </tr>
+            ) : (
+              <tr key={product._id}>
+                <td>{product.brand}</td>
+                <td>{product.title}</td>
+                <td>{product.info}</td>
+                <td>{product.category}</td>
+                <td>{product.type}</td>
+                <td>{product.connectivity}</td>
+                <td>₹{product.finalPrice}</td>
+                <td>₹{product.originalPrice}</td>
+                <td>
+                  <img
+                    src={`http://localhost:5000${product.imageUrl}`}
+                    alt={product.title}
+                    className="product-image"
+                  />
+                </td>
+                <td>
+                  <button
+                    className="productlist-edit-button"
+                    onClick={() => handleEditClick(product)}
+                  >
+                    Edit
+                  </button>
+                  <button
+                    className="productlist-delete-button"
+                    onClick={() => deleteProduct(product._id)}
+                  >
+                    Delete
+                  </button>
+                </td>
+
+
+              </tr>
+            )
+          )}
+        </tbody>
+      </table>
+      <style>
+        {`
+        
+    /* General Container Styling */
+    .productlist-container {
   padding: 20px;
   font-family: 'Poppins', sans-serif;
-  background-color: #000; /* Dark background */
+  background-color: #1a1a1a; /* Dark gray background for better contrast */
   color: white;
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+ margin-top: 60px; /* Margin to avoid content overlap with fixed header */
+  overflow-x: hidden; /* Prevent horizontal scroll */
 }
 
-/* Product List Page Title */
-.productlist-container .title {
-  font-size: 28px;
-  font-weight: bold;
-  color: #ff4b2b; /* Accent color for the title */
-  margin-bottom: 20px;
-  text-transform: uppercase;
-  animation: fadeIn 0.8s ease-in-out;
-}
+      .productlist-edit-button,
+    .productlist-delete-button {
+      padding: 8px 12px;
+      font-size: 12px;
+      font-weight: bold;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: transform 0.2s ease, background-color 0.3s ease;
+    }
 
-/* Ant Design Table */
-.ant-table {
-  background: transparent !important; /* Transparent table background */
-  color: white;
-  border-radius: 10px;
-  box-shadow: 0 10px 20px rgba(255, 0, 0, 0.2); /* Red glow for the table */
-}
+    .productlist-edit-button {
+      background-color: #4caf50;
+      color: white;
+      margin-right: 5px;
+    }
 
-.ant-table-thead > tr > th {
-  background: rgba(255, 255, 255, 0.1); /* Header background */
-  color: white;
-  font-weight: bold;
-  font-size: 16px;
-  text-transform: uppercase;
-}
+    .productlist-edit-button:hover {
+      background-color: #45a049;
+      transform: scale(1.05);
+    }
 
-.ant-table-tbody > tr > td {
-  background: rgba(255, 255, 255, 0.05); /* Row background */
-  color: white;
-  font-size: 14px;
-  transition: background 0.3s ease-in-out;
-}
+    .productlist-delete-button {
+      background-color: #f44336;
+      color: white;
+    }
 
-.ant-table-tbody > tr:hover > td {
-  background: rgba(255, 255, 255, 0.15); /* Hover effect for rows */
-}
+    .productlist-delete-button:hover {
+      background-color: #d32f2f;
+      transform: scale(1.05);
+    }
 
-.ant-pagination {
-  margin-top: 16px;
-}
+    /* Page Title Styling */
+    .productlist-title {
+      font-size: 2rem;
+      font-weight: bold;
+      color: #ff4b2b; /* Accent color for title */
+      margin-bottom: 20px;
+      text-transform: uppercase;
+      animation: fadeIn 0.8s ease-in-out;
+      text-align: center;
+    }
 
-.ant-pagination-item {
-  background: rgba(255, 255, 255, 0.1);
-  border: none;
-}
+    /* Table Styling */
+    .productlist-table {
+      width: 100%;
+      max-width: 1200px;
+      border-collapse: collapse;
+      margin: 0 auto;
+      background: transparent;
+      color: white;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 8px 16px rgba(255, 75, 43, 0.2); /* Subtle shadow for table */
+    }
 
-.ant-pagination-item a {
-  color: white;
-}
+    .productlist-table thead tr {
+      background-color: rgba(255, 75, 43, 0.2); /* Slight accent for header background */
+    }
 
-.ant-pagination-item-active {
-  background: #ff4b2b; /* Active pagination with accent color */
-}
+    .productlist-table thead th {
+      padding: 10px;
+      font-weight: bold;
+      font-size: 14px;
+      text-transform: uppercase;
+      text-align: left;
+    }
 
-.ant-pagination-item-active a {
-  color: white;
-}
+    .productlist-table tbody tr {
+      transition: background 0.3s ease-in-out;
+    }
 
-.ant-pagination-prev,
-.ant-pagination-next {
-  color: white;
-}
+    .productlist-table tbody tr:nth-child(even) {
+      background-color: rgba(255, 255, 255, 0.05); /* Alternate row styling */
+    }
 
-/* Fade In Animation */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
+    .productlist-table tbody tr:hover {
+      background-color: rgba(255, 255, 255, 0.15); /* Hover effect */
+    }
 
-/* Responsive Styles */
-@media (max-width: 1024px) {
-  .productlist-container {
-    padding: 15px; /* Reduced padding for medium-sized screens */
-  }
+    .productlist-table tbody td {
+      padding: 10px;
+      font-size: 14px;
+      text-align: left;
+      vertical-align: middle;
+    }
 
-  .productlist-container .title {
-    font-size: 24px; /* Smaller title for medium screens */
-  }
+    .productlist-table tbody img {
+      width: 50px;
+      height: 50px;
+      border-radius: 5px;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+    }
 
-  .ant-table-thead > tr > th {
-    font-size: 14px; /* Smaller font size for table headers */
-  }
+    .productlist-table tbody img:hover {
+      transform: scale(1.1); /* Slight zoom effect on hover */
+    }
 
-  .ant-table-tbody > tr > td {
-    font-size: 12px; /* Smaller font size for table data */
-  }
+    /* Fade-In Animation */
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
 
-  .ant-pagination-item {
-    font-size: 12px; /* Smaller pagination text */
-  }
-}
+    /* Responsive Design */
+    @media (max-width: 1024px) {
+      .productlist-container {
+        padding: 15px;
+      }
 
-@media (max-width: 768px) {
-  .productlist-container {
-    padding: 10px; /* Further reduce padding for smaller screens */
-  }
+      .productlist-title {
+        font-size: 1.8rem;
+      }
 
-  .productlist-container .title {
-    font-size: 20px; /* Smaller title for smaller screens */
-  }
+      .productlist-table thead th {
+        font-size: 12px;
+      }
 
-  .ant-table-thead > tr > th {
-    font-size: 12px; /* Smaller font size for table headers */
-  }
+      .productlist-table tbody td {
+        font-size: 12px;
+      }
+    }
 
-  .ant-table-tbody > tr > td {
-    font-size: 12px; /* Smaller font size for table data */
-  }
+    @media (max-width: 768px) {
+      .productlist-container {
+        padding: 10px;
+      }
 
-  .ant-pagination-item {
-    font-size: 10px; /* Smaller pagination text */
-  }
+      .productlist-title {
+        font-size: 1.5rem;
+      }
 
-  .ant-table {
-    box-shadow: none; /* Remove table shadow on smaller screens for cleaner look */
-  }
-}
+      .productlist-table thead th {
+        font-size: 10px;
+        padding: 8px;
+      }
 
-@media (max-width: 480px) {
-  .productlist-container {
-    padding: 8px; /* Reduced padding for very small screens */
-  }
+      .productlist-table tbody td {
+        font-size: 10px;
+        padding: 8px;
+      }
 
-  .productlist-container .title {
-    font-size: 18px; /* Very small title for small screens */
-  }
+      .productlist-table tbody img {
+        width: 40px;
+        height: 40px;
+      }
+    }
 
-  .ant-table-thead > tr > th {
-    font-size: 10px; /* Very small table header font size */
-  }
+    @media (max-width: 480px) {
+      .productlist-container {
+        padding: 8px;
+      }
 
-  .ant-table-tbody > tr > td {
-    font-size: 10px; /* Very small table data font size */
-  }
+      .productlist-title {
+        font-size: 1.2rem;
+      }
 
-  .ant-pagination-item {
-    font-size: 8px; /* Very small pagination text */
-  }
-}
+      .productlist-table thead th {
+        font-size: 8px;
+        padding: 5px;
+      }
 
+      .productlist-table tbody td {
+        font-size: 8px;
+        padding: 5px;
+      }
+
+      .productlist-table tbody img {
+        width: 30px;
+        height: 30px;
+      }
+
+     
+        
+    }
   `}
-</style>
-
-      <div className="productlist-container">
-      <Header /> 
-        <h3 className="mb-4 title">Products</h3>
-        <div>
-          <Table columns={columns} dataSource={[]} />
-        </div>
-      </div>
+      </style>
     </div>
   );
 };

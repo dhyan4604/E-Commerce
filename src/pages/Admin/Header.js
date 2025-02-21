@@ -41,7 +41,7 @@ const Header = () => {
           to="/customers"
           className={({ isActive }) => (isActive ? "active-link" : "link")}
         >
-          <BsPeople className="icon" /> Customers
+          <BsPeople className="icon" /> Users
         </NavLink>
         <NavLink
           to="/brandlist"
@@ -76,127 +76,133 @@ const Header = () => {
       </nav>
 
       <style>
-        {`
-          .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            width: 100%;
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            padding: 15px 25px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-            z-index: 100;
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-          }
+  {`
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      padding: 10px 20px; /* Slightly smaller padding */
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      z-index: 100;
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    }
 
-          .header-title {
-            font-size: 24px;
-            font-weight: bold;
-            color: #ff4b2b;
-            margin: 0;
-            text-align: center;
-            text-decoration: none;
-          }
+    .header-title {
+      font-size: 20px; /* Reduced size */
+      font-weight: bold;
+      color: #ff4b2b;
+      margin: 0;
+      text-align: center;
+      text-decoration: none;
+    }
 
-          .header-nav {
-            display: flex;
-            gap: 20px;
-            align-items: center;
-          }
+    .header-nav {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+    }
 
-          .link {
-            color: white;
-            font-size: 16px;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 10px 15px;
-            border-radius: 6px;
-            transition: background-color 0.3s, color 0.3s;
-          }
+    .link {
+      color: white;
+      font-size: 14px; /* Reduced size */
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 12px; /* Adjusted padding */
+      border-radius: 6px;
+      transition: background-color 0.3s, color 0.3s;
+    }
 
-          .link:hover {
-            background-color: #ff4b2b;
-            color: white;
-          }
+    .link:hover {
+      background-color: #ff4b2b;
+      color: white;
+    }
 
-          .active-link {
-            background-color: #ff4b2b;
-            color: white;
-          }
+    .active-link {
+      background-color: #ff4b2b;
+      color: white;
+    }
 
-          .icon {
-            font-size: 20px;
-          }
+    .icon {
+      font-size: 18px; /* Adjusted icon size */
+    }
 
-          .menu-toggle {
-            display: none;
-            background: none;
-            border: none;
-            color: white;
-            font-size: 24px;
-            cursor: pointer;
-          }
+    .menu-toggle {
+      display: none;
+      background: none;
+      border: none;
+      color: white;
+      font-size: 24px;
+      cursor: pointer;
+    }
 
-          @media (max-width: 768px) {
-            .header {
-              padding: 10px 20px;
-            }
+    /* Ensures content is not hidden behind the header */
+    .content {
+      margin-top: 70px; /* Adjust this value based on header height */
+    }
 
-            .header-title {
-              font-size: 20px;
-            }
+    @media (max-width: 768px) {
+      .header {
+        padding: 8px 15px; /* Reduced padding for smaller screens */
+      }
 
-            .header-nav {
-              display: none;
-              flex-direction: column;
-              gap: 15px;
-              position: absolute;
-              top: 60px;
-              right: 10px;
-              background: rgba(0, 0, 0, 0.9);
-              padding: 20px;
-              border-radius: 8px;
-              box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-              transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
-              opacity: 0;
-              transform: translateY(-20px);
-            }
+      .header-title {
+        font-size: 18px;
+      }
 
-            .header-nav.open {
-              display: flex;
-              opacity: 1;
-              transform: translateY(0);
-            }
+      .header-nav {
+        display: none;
+        flex-direction: column;
+        gap: 10px;
+        position: absolute;
+        top: 50px; /* Adjusted for smaller header */
+        right: 10px;
+        background: rgba(0, 0, 0, 0.9);
+        padding: 15px;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+        opacity: 0;
+        transform: translateY(-20px);
+      }
 
-            .menu-toggle {
-              display: block;
-            }
-          }
+      .header-nav.open {
+        display: flex;
+        opacity: 1;
+        transform: translateY(0);
+      }
 
-          @media (max-width: 480px) {
-            .header-title {
-              font-size: 18px;
-            }
+      .menu-toggle {
+        display: block;
+      }
+    }
 
-            .link {
-              font-size: 14px;
-              padding: 8px 12px;
-            }
+    @media (max-width: 480px) {
+      .header-title {
+        font-size: 16px;
+      }
 
-            .icon {
-              font-size: 18px;
-            }
-          }
-        `}
-      </style>
+      .link {
+        font-size: 12px;
+        padding: 6px 10px; /* Further reduced padding */
+      }
+
+      .icon {
+        font-size: 16px;
+      }
+    }
+  `}
+</style>
+
     </header>
   );
 };

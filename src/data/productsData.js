@@ -1,4 +1,7 @@
+import React, { useEffect } from "react";
+
 const productsData = [
+
     {
         id: 1,
         tag: "hero-product",
@@ -412,6 +415,8 @@ const productsData = [
     //     rateCount: 4,
     //     path: "/product-details/",
     // },
+
+    
 ];
 
 export default productsData;

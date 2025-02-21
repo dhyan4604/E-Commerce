@@ -9,40 +9,34 @@ import EmptyView from '../components/common/EmptyView';
 
 
 const AllProducts = () => {
-
     useDocTitle('All Products');
 
+    // Get `allProducts` from filtersContext
     const { allProducts } = useContext(filtersContext);
-
 
     return (
         <>
             <section id="all_products" className="section">
+                {/* Filter Bar */}
                 <FilterBar />
 
                 <div className="container">
-                    {
-                        allProducts.length ? (
-                            <div className="wrapper products_wrapper">
-                                {
-                                    allProducts.map(item => (
-                                        <ProductCard
-                                            key={item.id}
-                                            {...item}
-                                        />
-                                    ))
-                                }
-                            </div>
-                        ) : (
-                            <EmptyView
-                                icon={<BsExclamationCircle />}
-                                msg="No Results Found"
-                            />
-                        )
-                    }
+                    {allProducts && allProducts.length > 0 ? (
+                        <div className="wrapper products_wrapper">
+                            {allProducts.map((item) => (
+                                <ProductCard key={item.id} {...item} />
+                            ))}
+                        </div>
+                    ) : (
+                        <EmptyView
+                            icon={<BsExclamationCircle />}
+                            msg="No Results Found"
+                        />
+                    )}
                 </div>
             </section>
 
+            {/* Additional Services Section */}
             <Services />
         </>
     );
