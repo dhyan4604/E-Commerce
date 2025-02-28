@@ -4,15 +4,13 @@ import { Link } from 'react-router-dom';
 import { displayMoney } from '../../helpers/utils';
 import cartContext from '../../contexts/cart/cartContext';
 import useActive from '../../hooks/useActive';
-
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const ProductCard = (props) => {
-
     const { id, images, title, info, finalPrice, originalPrice, rateCount, path } = props;
-
     const { addItem } = useContext(cartContext);
     const { active, handleActive, activeClass } = useActive(false);
-
 
     // handling Add-to-cart
     const handleAddItem = () => {
@@ -21,6 +19,17 @@ const ProductCard = (props) => {
 
         handleActive(id);
 
+        // Show toast notification
+        toast.success(`${title} added to cart!`, {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            theme: "dark"
+        });
+
         setTimeout(() => {
             handleActive(false);
         }, 3000);
@@ -28,7 +37,6 @@ const ProductCard = (props) => {
 
     const newPrice = displayMoney(finalPrice);
     const oldPrice = displayMoney(originalPrice);
-
 
     return (
         <>
@@ -40,9 +48,7 @@ const ProductCard = (props) => {
                 </figure>
                 <div className="products_details">
                     <span className="rating_star">
-                        {
-                            [...Array(rateCount)].map((_, i) => <IoMdStar key={i} />)
-                        }
+                        {[...Array(rateCount)].map((_, i) => <IoMdStar key={i} />)}
                     </span>
                     <h3 className="products_title">
                         <Link to={`${path}${id}`}>{title}</Link>

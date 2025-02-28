@@ -6,6 +6,7 @@ import AdminRoutes from './routes/AdminRoutes';
 import Footer from './components/common/Footer';
 import BackTop from './components/common/BackTop';
 import { FiltersProvider } from './contexts/filters/filtersContext';
+import { ToastContainer } from 'react-toastify';
 
 
 
@@ -14,6 +15,7 @@ import { FiltersProvider } from './contexts/filters/filtersContext';
 const App = () => {
   return (
     <>
+     <ToastContainer />
       <CommonProvider>
         <FiltersProvider>
           <CartProvider>

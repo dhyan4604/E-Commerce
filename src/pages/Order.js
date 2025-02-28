@@ -1,7 +1,6 @@
 import React from 'react';
 
 const Orders = () => {
-
   const orders = [
     {
       _id: '12345',
@@ -36,20 +35,26 @@ const Orders = () => {
             color: white;
             font-family: 'Poppins', sans-serif;
             min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
           }
 
           .title {
-            font-size: 28px;
+            font-size: 32px;
             font-weight: bold;
             color: #ff4b2b; /* Accent color */
             margin-bottom: 20px;
             text-transform: uppercase;
+            text-align: center;
           }
 
           .orders-list {
             display: flex;
             flex-direction: column;
             gap: 20px;
+            width: 100%;
+            max-width: 600px;
           }
 
           .order-card {
@@ -61,13 +66,20 @@ const Orders = () => {
             border: 1px solid rgba(255, 255, 255, 0.2);
           }
 
+          .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+          }
+
           .order-card h3 {
-            margin: 0 0 10px;
+            margin: 0;
             font-size: 20px;
             color: #ff4b2b;
           }
 
-          .order-card p {
+          .order-details p {
             margin: 5px 0;
           }
 
@@ -75,10 +87,15 @@ const Orders = () => {
             margin-top: 10px;
           }
 
+          .order-items h4 {
+            margin-bottom: 10px;
+            color: #ff4b2b;
+          }
+
           .order-item {
             display: flex;
             justify-content: space-between;
-            padding: 5px 0;
+            padding: 8px 0;
             border-bottom: 1px solid rgba(255, 255, 255, 0.2);
           }
 
@@ -92,13 +109,17 @@ const Orders = () => {
       <div className="orders-list">
         {orders.map((order) => (
           <div key={order._id} className="order-card">
-            <h3>Order ID: {order._id}</h3>
-            <p><strong>Total Price:</strong> ₹{order.totalPrice}</p>
-            <p><strong>Payment Method:</strong> {order.paymentMethod}</p>
-            <p><strong>Address:</strong> {order.address}</p>
-            <p><strong>Phone:</strong> {order.phone}</p>
+            <div className="order-header">
+              <h3>Order ID: {order._id}</h3>
+              <p><strong>₹{order.totalPrice.toFixed(2)}</strong></p>
+            </div>
+            <div className="order-details">
+              <p><strong>Payment:</strong> {order.paymentMethod}</p>
+              <p><strong>Delivery Address:</strong> {order.address}</p>
+              <p><strong>Contact:</strong> {order.phone}</p>
+            </div>
             <div className="order-items">
-              <h4>Items:</h4>
+              <h4>Items Ordered:</h4>
               {order.items.map((item, index) => (
                 <div key={index} className="order-item">
                   <span>{item.name}</span>

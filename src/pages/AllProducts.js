@@ -8,6 +8,7 @@ import filtersContext from '../contexts/filters/filtersContext';
 import EmptyView from '../components/common/EmptyView';
 
 
+
 const AllProducts = () => {
     useDocTitle('All Products');
 
