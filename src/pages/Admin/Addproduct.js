@@ -31,10 +31,20 @@ const AddProduct = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
     const formData = new FormData();
-    Object.keys(productData).forEach((key) => {
-      formData.append(key, productData[key]);
-    });
+    formData.append("brand", productData.brand);
+    formData.append("title", productData.title);
+    formData.append("info", productData.info);
+    formData.append("category", productData.category);
+    formData.append("type", productData.type);
+    formData.append("connectivity", productData.connectivity);
+    formData.append("finalPrice", productData.finalPrice);
+    formData.append("originalPrice", productData.originalPrice);
+  
+    if (productData.image) {
+      formData.append("image", productData.image); // ✅ Append image file
+    }
   
     try {
       const response = await fetch("http://localhost:5000/api/products", {

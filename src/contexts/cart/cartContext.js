@@ -16,9 +16,17 @@ const CartProvider = ({ children }) => {
 
     // Dispatched Actions
     const addItem = (item) => {
+        const dynamicItem = {
+            id: item._id || item.id,
+            title: item.title,
+            finalPrice: item.finalPrice,
+            originalPrice: item.originalPrice,
+            quantity: 1,
+            images: item.images
+        };
         return dispatch({
             type: 'ADD_TO_CART',
-            payload: { item }
+            payload: { item: dynamicItem }
         });
     };
 
@@ -56,7 +64,7 @@ const CartProvider = ({ children }) => {
         removeItem,
         incrementItem,
         decrementItem,
-        clearCart // Add clearCart to the context values
+        clearCart
     };
 
     return (

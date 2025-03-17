@@ -11,56 +11,55 @@ import RelatedSlider from '../components/sliders/RelatedSlider';
 import ProductSummary from '../components/product/ProductSummary';
 import Services from '../components/common/Services';
 
-
 const ProductDetails = () => {
-
     useDocTitle('Product Details');
 
     const { handleActive, activeClass } = useActive(0);
-
     const { addItem } = useContext(cartContext);
-
     const { productId } = useParams();
 
-    // here the 'id' received has 'string-type', so converting it to a 'Number'
-    const prodId = parseInt(productId);
+    const [product, setProduct] = useState(null);
+    const [previewImg, setPreviewImg] = useState("");
 
-    // showing the Product based on the received 'id'
-    const product = productsData.find(item => item.id === prodId);
-
-    const { images, title, info, category, finalPrice, originalPrice, ratings, rateCount } = product;
-
-    const [previewImg, setPreviewImg] = useState(images[0]);
-
-
-    // handling Add-to-cart
-    const handleAddItem = () => {
-        addItem(product);
-    };
-
-
-    // setting the very-first image on re-render
     useEffect(() => {
-        setPreviewImg(images[0]);
+        const fetchProduct = async () => {
+            try {
+                const response = await fetch(`http://localhost:5000/api/products/${productId}`);
+                if (!response.ok) throw new Error("Failed to fetch product");
+
+                const data = await response.json();
+                console.log("Fetched Product:", data); // Debugging API response
+                
+                // ✅ Set the product & preview image
+                setProduct(data);
+                setPreviewImg(data.imageUrls?.[0] || "/placeholder.jpg");
+            } catch (error) {
+                console.error("Error fetching product:", error);
+                
+                // ✅ Fallback to static data if API fails
+                const fallbackProduct = productsData.find(item => item.id === parseInt(productId));
+                if (fallbackProduct) {
+                    setProduct(fallbackProduct);
+                    setPreviewImg(fallbackProduct.images?.[0] || "/placeholder.jpg");
+                }
+            }
+        };
+
+        fetchProduct();
         handleActive(0);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [images]);
+    }, [productId, handleActive]);
 
+    if (!product) return <h2>Loading product details...</h2>;
 
-    // handling Preview image
-    const handlePreviewImg = (i) => {
-        setPreviewImg(images[i]);
-        handleActive(i);
-    };
+    // Destructure product details
+    const { imageUrls, images, title, info, category, finalPrice, originalPrice, ratings, rateCount } = product;
 
-
-    // calculating Prices
-    const discountedPrice = originalPrice - finalPrice;
+    // ✅ Use dynamic image if available, otherwise fallback to static
+    const productImages = imageUrls?.length ? imageUrls : images || [];
     const newPrice = displayMoney(finalPrice);
     const oldPrice = displayMoney(originalPrice);
-    const savedPrice = displayMoney(discountedPrice);
-    const savedDiscount = calculateDiscount(discountedPrice, originalPrice);
-
+    const savedPrice = displayMoney(originalPrice - finalPrice);
+    const savedDiscount = calculateDiscount(originalPrice - finalPrice, originalPrice);
 
     return (
         <>
@@ -71,17 +70,15 @@ const ProductDetails = () => {
                         {/*=== Product Details Left-content ===*/}
                         <div className="prod_details_left_col">
                             <div className="prod_details_tabs">
-                                {
-                                    images.map((img, i) => (
-                                        <div
-                                            key={i}
-                                            className={`tabs_item ${activeClass(i)}`}
-                                            onClick={() => handlePreviewImg(i)}
-                                        >
-                                            <img src={img} alt="product-img" />
-                                        </div>
-                                    ))
-                                }
+                                {productImages.map((img, i) => (
+                                    <div
+                                        key={i}
+                                        className={`tabs_item ${activeClass(i)}`}
+                                        onClick={() => setPreviewImg(img)}
+                                    >
+                                        <img src={img} alt="product-img" />
+                                    </div>
+                                ))}
                             </div>
                             <figure className="prod_details_img">
                                 <img src={previewImg} alt="product-img" />
@@ -95,9 +92,7 @@ const ProductDetails = () => {
 
                             <div className="prod_details_ratings">
                                 <span className="rating_star">
-                                    {
-                                        [...Array(rateCount)].map((_, i) => <IoMdStar key={i} />)
-                                    }
+                                    {[...Array(rateCount || 0)].map((_, i) => <IoMdStar key={i} />)}
                                 </span>
                                 <span>|</span>
                                 <Link to="*">{ratings} Ratings</Link>
@@ -136,7 +131,7 @@ const ProductDetails = () => {
                                 <button
                                     type="button"
                                     className="btn"
-                                    onClick={handleAddItem}
+                                    onClick={() => addItem(product)}
                                 >
                                     Add to cart
                                 </button>

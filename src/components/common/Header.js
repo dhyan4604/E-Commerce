@@ -5,6 +5,7 @@ import {
   AiOutlineShoppingCart,
   AiOutlineUser,
   AiOutlineDashboard,
+  AiOutlineShopping, // ✅ Added Orders Icon
 } from "react-icons/ai";
 import commonContext from "../../contexts/common/commonContext";
 import cartContext from "../../contexts/cart/cartContext";
@@ -64,6 +65,14 @@ const Header = () => {
                 <div className="tooltip">Cart</div>
               </div>
 
+              {/* Orders Action ✅ */}
+              <div className="orders_action">
+                <Link to="/order">
+                  <AiOutlineShopping/>
+                </Link>
+                <div className="tooltip">Orders</div>
+              </div>
+
               {/* Profile Action */}
               <div className="user_action">
                 <Link to="/profile">
@@ -71,18 +80,6 @@ const Header = () => {
                 </Link>
                 <div className="tooltip">Profile</div>
               </div>
-
-              {/* Admin Action - Visible Only for Admins */}
-              {/* {userRole === "admin" && ( */}
-                <div className="admin_action">
-                  <Link to="/admin/dashboard">
-                    <AiOutlineDashboard />
-                  </Link>
-                  <div className="tooltip">Admin</div>
-                </div>
-              {/* )} */}
-
-             
             </nav>
           </div>
         </div>
@@ -90,8 +87,6 @@ const Header = () => {
 
       <SearchBar />
       <AccountForm />
-
-     
     </>
   );
 };

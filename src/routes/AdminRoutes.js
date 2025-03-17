@@ -7,11 +7,13 @@ import Customers from '../pages/Admin/Customers';
 import Orders from '../pages/Admin/Orders';
 import ProductList from '../pages/Admin/Productlist';
 import Header from '../pages/Admin/Header';
+import Adminlogin from '../pages/Admin/Adminlogin';
 
 
 const AdminRoutes = () => {
     return (
         <Routes>
+            <Route path="/admin" element={<Adminlogin />} /> 
             <Route path="header" element={<Header />} />
             <Route path="dashboard" element={<Dashboard />} />
             <Route path="add-product" element={<AddProduct />} />

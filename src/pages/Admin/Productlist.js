@@ -171,19 +171,16 @@ const Productlist = () => {
                 <td>₹{product.finalPrice}</td>
                 <td>₹{product.originalPrice}</td>
                 <td>
-                  <img
-                    src={`http://localhost:5000${product.imageUrl}`}
-                    alt={product.title}
-                    className="product-image"
-                  />
+                <img src={product.imageUrls[0]} alt={product.title} className="product-image" />
+
                 </td>
                 <td>
-                  <button
+                  {/* <button
                     className="productlist-edit-button"
                     onClick={() => handleEditClick(product)}
                   >
                     Edit
-                  </button>
+                  </button> */}
                   <button
                     className="productlist-delete-button"
                     onClick={() => deleteProduct(product._id)}

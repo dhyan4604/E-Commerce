@@ -9,7 +9,6 @@ const Profile = ({ user, setUser }) => {
   const [address, setAddress] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [shippingAddress, setShippingAddress] = useState("");
-  const [orderHistory, setOrderHistory] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
@@ -21,19 +20,15 @@ const Profile = ({ user, setUser }) => {
           const profileResponse = await axios.get("http://localhost:5000/api/profile", {
             headers: { Authorization: `Bearer ${token}` },
           });
-          const ordersResponse = await axios.get("http://localhost:5000/api/orders", {
-            headers: { Authorization: `Bearer ${token}` },
-          });
 
           setProfile(profileResponse.data);
           setImage(profileResponse.data.profileImage || null);
           setAddress(profileResponse.data.address || "");
           setPhoneNumber(profileResponse.data.phoneNumber || "");
           setShippingAddress(profileResponse.data.shippingAddress || "");
-          setOrderHistory(ordersResponse.data); // Update order history state
           setUser(profileResponse.data);
         } catch (error) {
-          console.error("Error fetching profile or orders", error);
+          console.error("Error fetching profile", error);
         } finally {
           setIsLoading(false);
         }
@@ -77,29 +72,11 @@ const Profile = ({ user, setUser }) => {
     try {
       setIsLoading(true);
 
-      if (address !== profile.address) {
-        await axios.post(
-          "http://localhost:5000/api/update-address",
-          { address },
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
-      }
-
-      if (phoneNumber !== profile.phoneNumber) {
-        await axios.post(
-          "http://localhost:5000/api/update-phone-number",
-          { phoneNumber },
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
-      }
-
-      if (shippingAddress !== profile.shippingAddress) {
-        await axios.post(
-          "http://localhost:5000/api/update-shipping-address",
-          { shippingAddress },
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
-      }
+      await axios.post(
+        "http://localhost:5000/api/update-profile",
+        { address, phoneNumber, shippingAddress },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
 
       alert("Profile updated successfully!");
     } catch (error) {
@@ -129,20 +106,17 @@ const Profile = ({ user, setUser }) => {
                 <h2>{profile.name}</h2>
                 <p>{profile.email}</p>
               </div>
-              <div className="upload-btn-container">
-                <label className="upload-btn">
-                  Select Image
-                  <input type="file" onChange={handleImageUpload} />
-                </label>
-              </div>
+              <label className="upload-btn">
+                Upload New Image
+                <input type="file" onChange={handleImageUpload} />
+              </label>
             </div>
 
             <div className="profile-edit-form">
               <div className="form-group">
-                <label htmlFor="address">Delivery Address</label>
+                <label>Delivery Address</label>
                 <input
                   type="text"
-                  id="address"
                   value={address}
                   onChange={(e) => setAddress(e.target.value)}
                   placeholder="Enter delivery address"
@@ -151,10 +125,9 @@ const Profile = ({ user, setUser }) => {
               </div>
 
               <div className="form-group">
-                <label htmlFor="phone">Phone Number</label>
+                <label>Phone Number</label>
                 <input
                   type="text"
-                  id="phone"
                   value={phoneNumber}
                   onChange={(e) => setPhoneNumber(e.target.value)}
                   placeholder="Enter your phone number"
@@ -163,10 +136,9 @@ const Profile = ({ user, setUser }) => {
               </div>
 
               <div className="form-group">
-                <label htmlFor="shipping">Shipping Address</label>
+                <label>Shipping Address</label>
                 <input
                   type="text"
-                  id="shipping"
                   value={shippingAddress}
                   onChange={(e) => setShippingAddress(e.target.value)}
                   placeholder="Enter your shipping address"
@@ -179,25 +151,6 @@ const Profile = ({ user, setUser }) => {
               </button>
             </div>
 
-            <div className="order-history-section">
-              <h3>Order History</h3>
-              {orderHistory.length > 0 ? (
-                <ul>
-                  {orderHistory.map((order) => (
-                    <li key={order._id} className="order-item">
-                      <strong>Order ID:</strong> {order._id} <br />
-                      <strong>Date:</strong> {new Date(order.createdAt).toLocaleDateString()} <br />
-                      <strong>Status: Order Confirmed</strong> {order.status} <br />
-                      <strong>Total:</strong> {order.totalAmount}
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <p>No orders found.</p>
-              )}
-            </div>
-
-
             <button className="logout-btn" onClick={handleLogout}>
               Logout
             </button>
@@ -208,306 +161,115 @@ const Profile = ({ user, setUser }) => {
           </p>
         )}
       </div>
+
       <style>
         {`
-    /* Profile Page - Modern & Elegant Design */
-    .profile-page {
-      display: flex;
-      justify-content: center;
-      align-items: flex-start; /* Align at the top */
-      min-height: 100vh;
-      background: #000; /* Black background */
-      font-family: 'Poppins', sans-serif;
-      padding: 60px 20px; /* Increased top spacing for margin */
-      margin-top: 60px; /* Space from header */
-      margin-bottom: 60px; /* Space from footer */
-    }
+          /* Profile Page */
+          .profile-page {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: #000;
+            font-family: 'Poppins', sans-serif;
+            padding: 80px 20px;
+          }
 
-    .profile-container {
-      background: rgba(255, 255, 255, 0.1);
-      padding: 30px 20px; /* Decreased padding */
-      border-radius: 12px;
-      backdrop-filter: blur(10px);
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-      width: 100%;
-      max-width: 500px; /* Decreased box width */
-      text-align: center;
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      animation: fadeIn 0.8s ease-in-out;
-    }
+          .profile-container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+          }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(-20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
+          .profile-header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 30px;
+          }
 
-    /* Remaining styles unchanged */
-    .profile-header {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      gap: 20px; /* Increased spacing */
-      margin-bottom: 30px;
-    }
+          .profile-info h2 {
+            font-size: 24px;
+            margin: 10px 0;
+            color: white;
+          }
 
-    .profile-info h2 {
-      font-size: 28px;
-      margin: 0;
-      color: white; /* Header text color updated */
-    }
+          .profile-info p {
+            font-size: 16px;
+            color: #c5c6c7;
+          }
 
-    .profile-info p {
-      font-size: 16px;
-      color: #c5c6c7;
-    }
+          .profile-image {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            overflow: hidden;
+            background-color: #222;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 10px rgba(255, 255, 255, 0.1);
+          }
 
-    .profile-image {
-      width: 140px;
-      height: 140px;
-      border-radius: 50%;
-      overflow: hidden;
-      background-color: #222;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      box-shadow: 0 4px 10px rgba(255, 255, 255, 0.1);
-      transition: transform 0.3s ease-in-out;
-    }
+          .profile-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+          }
 
-    .profile-image:hover {
-      transform: scale(1.08);
-    }
+          .upload-btn {
+            cursor: pointer;
+            padding: 10px 20px;
+            background: linear-gradient(90deg, #ff4b2b, #ff416c);
+            border-radius: 8px;
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+            border: none;
+            margin-top: 10px;
+          }
 
-    .profile-image img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
+          .profile-edit-form {
+            text-align: left;
+          }
 
-    .upload-btn-container {
-      margin-top: 10px;
-    }
+          .form-group {
+            margin-bottom: 15px;
+          }
 
-    .upload-btn {
-      cursor: pointer;
-      padding: 10px 20px;
-      background: linear-gradient(90deg, #ff4b2b, #ff416c);
-      border-radius: 8px;
-      color: white;
-      font-weight: bold;
-      font-size: 14px;
-      transition: transform 0.3s ease, background 0.3s ease;
-      border: none;
-    }
+          .form-group label {
+            display: block;
+            font-size: 14px;
+            color: white;
+            margin-bottom: 5px;
+          }
 
-    .upload-btn:hover {
-      transform: scale(1.05);
-      background: linear-gradient(90deg, #d84315, #d32f2f);
-    }
+          .form-group input {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 14px;
+            color: white;
+            background-color: rgba(255, 255, 255, 0.1);
+          }
 
-    .upload-btn input {
-      display: none;
-    }
-
-    .profile-edit-form {
-      margin-top: 30px;
-      text-align: left;
-      animation: fadeIn 1s ease-in-out;
-    }
-
-    .form-group {
-      margin-bottom: 20px;
-    }
-
-    .form-group label {
-      display: block;
-      font-size: 16px;
-      color: white;
-      margin-bottom: 8px;
-    }
-
-    .form-group input {
-      width: 100%;
-      padding: 12px;
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      border-radius: 5px;
-      font-size: 16px;
-      color: white;
-      background-color: rgba(255, 255, 255, 0.1);
-      transition: border-color 0.3s ease;
-    }
-
-    .form-group input:focus {
-      border-color: #ff4b2b;
-      outline: none;
-    }
-
-    .submit-btn {
-      width: 100%;
-      padding: 14px;
-      background: linear-gradient(90deg, #ff4b2b, #ff416c);
-      color: white;
-      border: none;
-      border-radius: 8px;
-      font-size: 16px;
-      cursor: pointer;
-      font-weight: bold;
-      transition: transform 0.3s ease, background 0.3s ease;
-    }
-
-    .submit-btn:hover {
-      transform: scale(1.05);
-      background: linear-gradient(90deg, #d84315, #d32f2f);
-    }
-
-    .order-history-section {
-      margin-top: 40px;
-      text-align: left;
-      animation: fadeIn 1.2s ease-in-out;
-    }
-
-    .order-history-section h3 {
-      font-size: 20px;
-      color: white;
-      margin-bottom: 10px;
-    }
-
-    .order-history-section ul {
-      list-style-type: none;
-      padding: 0;
-      color: white;
-    }
-
-    .order-history-section li {
-      font-size: 16px;
-      margin-bottom: 10px;
-      padding: 12px;
-      border-radius: 5px;
-      background: rgba(255, 255, 255, 0.1);
-      transition: transform 0.3s, background 0.3s;
-    }
-
-    .order-history-section li:hover {
-      transform: scale(1.02);
-      background: rgba(255, 255, 255, 0.2);
-      color: #ff4b2b;
-    }
-
-    .logout-btn {
-      width: 100%;
-      padding: 14px;
-      margin-top: 20px;
-      background: linear-gradient(90deg, #ff4b2b, #ff416c);
-      color: white;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 16px;
-      font-weight: bold;
-      transition: transform 0.3s ease, background 0.3s ease;
-    }
-
-    .logout-btn:hover {
-      transform: scale(1.05);
-      background: linear-gradient(90deg, #d84315, #d32f2f);
-    }
-
-    .login-prompt {
-      font-size: 16px;
-      color: white;
-      margin-top: 15px;
-    }
-
-    a {
-      color: rgb(169, 175, 195);
-      text-decoration: none;
-      font-weight: bold;
-      transition: color 0.3s ease;
-    }
-
-    a:hover {
-      color: #ff1a1a;
-    }
-
-    @media (max-width: 768px) {
-      .profile-container {
-        padding: 20px 15px;
-        max-width: 90%;
-      }
-
-      .profile-info h2 {
-        font-size: 24px;
-      }
-
-      .profile-info p {
-        font-size: 14px;
-      }
-
-      .form-group label {
-        font-size: 14px;
-      }
-
-      .form-group input {
-        padding: 10px;
-        font-size: 14px;
-      }
-
-      .submit-btn,
-      .logout-btn {
-        padding: 12px;
-        font-size: 14px;
-      }
-
-      .order-history-section h3 {
-        font-size: 18px;
-      }
-
-      .order-history-section li {
-        font-size: 14px;
-        padding: 10px;
-      }
-    }
-
-    @media (max-width: 480px) {
-      .profile-container {
-        padding: 15px 10px;
-        max-width: 100%;
-      }
-
-      .profile-info h2 {
-        font-size: 20px;
-      }
-
-      .profile-info p {
-        font-size: 12px;
-      }
-
-      .form-group label {
-        font-size: 12px;
-      }
-
-      .form-group input {
-        padding: 8px;
-        font-size: 12px;
-      }
-
-      .submit-btn,
-      .logout-btn {
-        padding: 10px;
-        font-size: 12px;
-      }
-
-      .order-history-section h3 {
-        font-size: 16px;
-      }
-
-      .order-history-section li {
-        font-size: 12px;
-        padding: 8px;
-      }
-    }
-  `}
+          .submit-btn, .logout-btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(90deg, #ff4b2b, #ff416c);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            margin-top: 15px;
+          }
+        `}
       </style>
     </div>
   );
