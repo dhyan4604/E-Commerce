@@ -1,18 +1,40 @@
-import React, { useState } from 'react';
-import Header from './Header';
+import React, { useState, useEffect } from "react";
+import Header from "./Header";
 
-const AddProduct = () => {
+const AddProduct = ({ productToEdit, onSave, onCancel }) => {
   const [productData, setProductData] = useState({
-    brand: '',
-    title: '',
-    info: '',
-    category: '',
-    type: '',
-    connectivity: '',
-    finalPrice: '',
-    originalPrice: '',
-    image: null,
+    brand: "",
+    title: "",
+    info: "",
+    category: "",
+    type: "",
+    connectivity: "",
+    finalPrice: "",
+    originalPrice: "",
+    images: [],
   });
+
+  const [previewImages, setPreviewImages] = useState([]); // ✅ Store image previews
+
+  // ✅ Prefill form when editing a product
+  useEffect(() => {
+    if (productToEdit) {
+      setProductData({
+        brand: productToEdit.brand || "",
+        title: productToEdit.title || "",
+        info: productToEdit.info || "",
+        category: productToEdit.category || "",
+        type: productToEdit.type || "",
+        connectivity: productToEdit.connectivity || "",
+        finalPrice: productToEdit.finalPrice || "",
+        originalPrice: productToEdit.originalPrice || "",
+        images: [], // Reset images field
+      });
+
+      // ✅ Load existing images for preview
+      setPreviewImages(productToEdit.imageUrls || []);
+    }
+  }, [productToEdit]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -22,16 +44,22 @@ const AddProduct = () => {
     });
   };
 
+  // ✅ Handle Image Selection & Show Previews
   const handleImageChange = (e) => {
+    const selectedFiles = Array.from(e.target.files);
     setProductData({
       ...productData,
-      image: e.target.files[0],
+      images: selectedFiles, // ✅ Update images in state
     });
+
+    // ✅ Generate previews for selected images
+    const previewUrls = selectedFiles.map((file) => URL.createObjectURL(file));
+    setPreviewImages(previewUrls);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     const formData = new FormData();
     formData.append("brand", productData.brand);
     formData.append("title", productData.title);
@@ -41,45 +69,161 @@ const AddProduct = () => {
     formData.append("connectivity", productData.connectivity);
     formData.append("finalPrice", productData.finalPrice);
     formData.append("originalPrice", productData.originalPrice);
-  
-    if (productData.image) {
-      formData.append("image", productData.image); // ✅ Append image file
-    }
-  
+
+    productData.images.forEach((image) => {
+      formData.append("images", image);
+    });
+
     try {
-      const response = await fetch("http://localhost:5000/api/products", {
-        method: "POST",
-        body: formData,
-      });
-      const data = await response.json();
-      if (response.ok) {
-        alert("Product added successfully!");
-        setProductData({
-          brand: "",
-          title: "",
-          info: "",
-          category: "",
-          type: "",
-          connectivity: "",
-          finalPrice: "",
-          originalPrice: "",
-          image: null,
+      let response;
+      if (productToEdit) {
+        // ✅ Update Product (PUT request)
+        response = await fetch(`http://localhost:5000/api/products/${productToEdit._id}`, {
+          method: "PUT",
+          body: formData,
         });
       } else {
-        alert("Failed to add product: " + data.message);
+        // ✅ Add New Product (POST request)
+        response = await fetch("http://localhost:5000/api/products", {
+          method: "POST",
+          body: formData,
+        });
+      }
+
+      const data = await response.json();
+      if (response.ok) {
+        alert(productToEdit ? "Product updated successfully!" : "Product added successfully!");
+        // onSave(data); // ✅ Refresh product list
+      } else {
+        alert("Failed to save product: " + data.message);
       }
     } catch (error) {
-      console.error("Error adding product:", error);
+      console.error("Error saving product:", error);
       alert("An error occurred. Please try again.");
     }
   };
-  
 
   return (
-    <div>
+    <div className="add-product-page">
+      <Header />
+      <form className="add-product-form" onSubmit={handleSubmit}>
+        <h1>{productToEdit ? "Edit Product" : "Add Product"}</h1>
+
+        <div className="form-group">
+          <label>Brand:</label>
+          <input type="text" name="brand" value={productData.brand} onChange={handleChange} required />
+        </div>
+
+        <div className="form-group">
+          <label>Title:</label>
+          <input type="text" name="title" value={productData.title} onChange={handleChange} required />
+        </div>
+
+        <div className="form-group">
+          <label>Info:</label>
+          <textarea name="info" value={productData.info} onChange={handleChange} rows="3" required />
+        </div>
+
+        <div className="form-group">
+          <label>Category:</label>
+          <input type="text" name="category" value={productData.category} onChange={handleChange} required />
+        </div>
+
+        <div className="form-group">
+          <label>Type:</label>
+          <input type="text" name="type" value={productData.type} onChange={handleChange} required />
+        </div>
+
+        <div className="form-group">
+          <label>Connectivity:</label>
+          <input type="text" name="connectivity" value={productData.connectivity} onChange={handleChange} required />
+        </div>
+
+        <div className="form-group">
+          <label>Final Price:</label>
+          <input type="number" name="finalPrice" value={productData.finalPrice} onChange={handleChange} required />
+        </div>
+
+        <div className="form-group">
+          <label>Original Price:</label>
+          <input type="number" name="originalPrice" value={productData.originalPrice} onChange={handleChange} required />
+        </div>
+
+        <div className="form-group">
+          <label>Product Images:</label>
+          <input type="file" accept="image/*" multiple onChange={handleImageChange} required={!productToEdit} />
+        </div>
+
+        {/* ✅ Image Previews */}
+        <div className="preview-container">
+          {previewImages.length > 0 ? (
+            previewImages.map((img, index) => (
+              <img key={index} src={img} alt="Preview" />
+            ))
+          ) : (
+            <p>No Images Selected</p>
+          )}
+        </div>
+
+        <button type="submit" className="add-product-btn">{productToEdit ? "Update Product" : "Add Product"}</button>
+        <button type="button" className="cancel-btn" onClick={onCancel}>Cancel</button>
+      </form>
+
+      {/* Existing CSS */}
       <style>
-  {`
-    /* Add Product Page */
+        {`
+        .add-product-page {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          background-color: #000;
+          padding: 50px 20px;
+          min-height: 100vh;
+          font-family: 'Poppins', sans-serif;
+        }
+
+        .form-title {
+          color: #ff4b2b;
+          font-size: 28px;
+          margin-bottom: 20px;
+        }
+
+        .add-product-form {
+          display: flex;
+          flex-direction: column;
+          background: rgba(255, 255, 255, 0.1);
+          padding: 20px;
+          border-radius: 10px;
+          box-shadow: 0 10px 30px rgba(255, 0, 0, 0.2);
+          width: 100%;
+          max-width: 600px;
+        }
+
+        input {
+          width: 100%;
+          padding: 12px;
+          font-size: 16px;
+          border-radius: 6px;
+          border: 1px solid rgba(255, 255, 255, 0.2);
+          background: rgba(255, 255, 255, 0.1);
+          color: white;
+          margin-bottom: 10px;
+        }
+
+        .preview-container {
+          display: flex;
+          flex-wrap: wrap;
+          margin-top: 10px;
+        }
+
+        .preview-container img {
+          width: 80px;
+          height: 80px;
+          object-fit: cover;
+          margin: 5px;
+          border-radius: 8px;
+        }
+           /* Add Product Page */
     .add-product-page {
       display: flex;
       justify-content: center;
@@ -213,109 +357,8 @@ const AddProduct = () => {
       .add-product-btn {
         font-size: 12px; /* Smaller button text */
       }
-    }
-  `}
-</style>
-
-
-      <div className="add-product-page">
-        <Header />
-        <form className="add-product-form" onSubmit={handleSubmit}>
-          <h1>Add Product</h1>
-          <div className="form-group">
-            <label>Brand:</label>
-            <input
-              type="text"
-              name="brand"
-              value={productData.brand}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div className="form-group">
-            <label>Title:</label>
-            <input
-              type="text"
-              name="title"
-              value={productData.title}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div className="form-group">
-            <label>Info:</label>
-            <textarea
-              name="info"
-              value={productData.info}
-              onChange={handleChange}
-              rows="3" /* Reduced height of textarea */
-              required
-            />
-          </div>
-          <div className="form-group">
-            <label>Category:</label>
-            <input
-              type="text"
-              name="category"
-              value={productData.category}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div className="form-group">
-            <label>Type:</label>
-            <input
-              type="text"
-              name="type"
-              value={productData.type}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div className="form-group">
-            <label>Connectivity:</label>
-            <input
-              type="text"
-              name="connectivity"
-              value={productData.connectivity}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div className="form-group">
-            <label>Final Price:</label>
-            <input
-              type="number"
-              name="finalPrice"
-              value={productData.finalPrice}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div className="form-group">
-            <label>Original Price:</label>
-            <input
-              type="number"
-              name="originalPrice"
-              value={productData.originalPrice}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div className="form-group">
-            <label>Product Image:</label>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleImageChange}
-              required
-            />
-          </div>
-          <button type="submit" className="add-product-btn">
-            Add Product
-          </button>
-        </form>
-      </div>
+        `}
+      </style>
     </div>
   );
 };

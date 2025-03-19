@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-const Profile = ({ user, setUser }) => {
+const Profile = () => {
   const navigate = useNavigate();
   const [profile, setProfile] = useState(null);
   const [image, setImage] = useState(null);
@@ -14,29 +14,31 @@ const Profile = ({ user, setUser }) => {
   useEffect(() => {
     const fetchProfile = async () => {
       const token = localStorage.getItem("authToken");
-      if (token) {
-        try {
-          setIsLoading(true);
-          const profileResponse = await axios.get("http://localhost:5000/api/profile", {
-            headers: { Authorization: `Bearer ${token}` },
-          });
+      if (!token) {
+        navigate("/login"); // Redirect if not logged in
+        return;
+      }
 
-          setProfile(profileResponse.data);
-          setImage(profileResponse.data.profileImage || null);
-          setAddress(profileResponse.data.address || "");
-          setPhoneNumber(profileResponse.data.phoneNumber || "");
-          setShippingAddress(profileResponse.data.shippingAddress || "");
-          setUser(profileResponse.data);
-        } catch (error) {
-          console.error("Error fetching profile", error);
-        } finally {
-          setIsLoading(false);
-        }
+      try {
+        setIsLoading(true);
+        const { data } = await axios.get("http://localhost:5000/api/profile", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        setProfile(data);
+        setImage(data.profileImage || null);
+        setAddress(data.address || "");
+        setPhoneNumber(data.phoneNumber || "");
+        setShippingAddress(data.shippingAddress || "");
+      } catch (error) {
+        console.error("Error fetching profile", error);
+      } finally {
+        setIsLoading(false);
       }
     };
 
     fetchProfile();
-  }, [user, setUser]);
+  }, []);
 
   const handleLogout = () => {
     localStorage.removeItem("authToken");
@@ -46,34 +48,33 @@ const Profile = ({ user, setUser }) => {
 
   const handleImageUpload = async (event) => {
     const file = event.target.files[0];
-    if (file) {
-      const formData = new FormData();
-      formData.append("profileImage", file);
+    if (!file) return;
 
-      try {
-        const token = localStorage.getItem("authToken");
-        const response = await axios.post("http://localhost:5000/api/upload-profile-image", formData, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "multipart/form-data",
-          },
-        });
-        setImage(response.data.profileImage);
-        alert("Profile image updated successfully!");
-      } catch (error) {
-        console.error("Error uploading image", error);
-        alert("Failed to upload image");
-      }
+    const formData = new FormData();
+    formData.append("profileImage", file);
+
+    try {
+      const token = localStorage.getItem("authToken");
+      const { data } = await axios.post(
+        "http://localhost:5000/api/upload-profile-image",
+        formData,
+        { headers: { Authorization: `Bearer ${token}`, "Content-Type": "multipart/form-data" } }
+      );
+      setImage(data.profileImage);
+      alert("Profile image updated successfully!");
+    } catch (error) {
+      console.error("Error uploading image", error);
+      alert("Failed to upload image");
     }
   };
 
   const handleSaveChanges = async () => {
-    const token = localStorage.getItem("authToken");
     try {
       setIsLoading(true);
+      const token = localStorage.getItem("authToken");
 
-      await axios.post(
-        "http://localhost:5000/api/update-profile",
+      await axios.put( // ✅ Changed to PUT method
+        "http://localhost:5000/api/profile", // ✅ Corrected API endpoint
         { address, phoneNumber, shippingAddress },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -96,11 +97,7 @@ const Profile = ({ user, setUser }) => {
           <>
             <div className="profile-header">
               <div className="profile-image">
-                {image ? (
-                  <img src={`http://localhost:5000${image}`} alt="Profile" />
-                ) : (
-                  <span>No profile image</span>
-                )}
+                {image ? <img src={`http://localhost:5000${image}`} alt="Profile" /> : <span>No profile image</span>}
               </div>
               <div className="profile-info">
                 <h2>{profile.name}</h2>
@@ -115,35 +112,17 @@ const Profile = ({ user, setUser }) => {
             <div className="profile-edit-form">
               <div className="form-group">
                 <label>Delivery Address</label>
-                <input
-                  type="text"
-                  value={address}
-                  onChange={(e) => setAddress(e.target.value)}
-                  placeholder="Enter delivery address"
-                  className="input-field"
-                />
+                <input type="text" value={address} onChange={(e) => setAddress(e.target.value)} placeholder="Enter delivery address" />
               </div>
 
               <div className="form-group">
                 <label>Phone Number</label>
-                <input
-                  type="text"
-                  value={phoneNumber}
-                  onChange={(e) => setPhoneNumber(e.target.value)}
-                  placeholder="Enter your phone number"
-                  className="input-field"
-                />
+                <input type="text" value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} placeholder="Enter your phone number" />
               </div>
 
               <div className="form-group">
                 <label>Shipping Address</label>
-                <input
-                  type="text"
-                  value={shippingAddress}
-                  onChange={(e) => setShippingAddress(e.target.value)}
-                  placeholder="Enter your shipping address"
-                  className="input-field"
-                />
+                <input type="text" value={shippingAddress} onChange={(e) => setShippingAddress(e.target.value)} placeholder="Enter your shipping address" />
               </div>
 
               <button className="submit-btn" onClick={handleSaveChanges}>
@@ -161,7 +140,6 @@ const Profile = ({ user, setUser }) => {
           </p>
         )}
       </div>
-
       <style>
         {`
           /* Profile Page */

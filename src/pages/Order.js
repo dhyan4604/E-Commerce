@@ -1,38 +1,32 @@
 import React, { useEffect, useState } from "react";
+import axios from "axios";
 
 const Orders = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  const authToken = localStorage.getItem("authToken"); // Get user's auth token
+  const authToken = localStorage.getItem("authToken");
 
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/orders", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${authToken}`, // ✅ Send token for authentication
-          },
+        if (!authToken) throw new Error("Unauthorized: No Token Found");
+
+        const response = await axios.get("http://localhost:5000/api/orders", {
+          headers: { Authorization: `Bearer ${authToken}` },
         });
 
-        if (!response.ok) {
-          throw new Error("Failed to fetch orders");
-        }
-
-        const data = await response.json();
-        setOrders(data);
-        setLoading(false);
+        setOrders(response.data);
       } catch (err) {
         setError(err.message);
+      } finally {
         setLoading(false);
       }
     };
 
     fetchOrders();
-  }, [authToken]);
+  }, [authToken]); // ✅ Automatically re-fetch when `authToken` changes
 
   return (
     <div className="orders-container">
@@ -40,7 +34,7 @@ const Orders = () => {
         {`
           .orders-container {
             padding: 20px;
-            background-color: #000; /* Black background */
+            background-color: #000;
             color: white;
             font-family: 'Poppins', sans-serif;
             min-height: 100vh;
@@ -52,7 +46,7 @@ const Orders = () => {
           .title {
             font-size: 32px;
             font-weight: bold;
-            color: #ff4b2b; /* Accent color */
+            color: #ff4b2b;
             margin-bottom: 20px;
             text-transform: uppercase;
             text-align: center;
@@ -111,6 +105,35 @@ const Orders = () => {
           .order-item:last-child {
             border-bottom: none;
           }
+
+          /* Status Styling */
+          .status {
+            display: inline-block;
+            padding: 6px 10px;
+            border-radius: 5px;
+            font-weight: bold;
+            text-transform: capitalize;
+          }
+
+          .status-pending {
+            background-color: orange;
+            color: black;
+          }
+
+          .status-shipped {
+            background-color: blue;
+            color: white;
+          }
+
+          .status-delivered {
+            background-color: green;
+            color: white;
+          }
+
+          .status-cancelled {
+            background-color: red;
+            color: white;
+          }
         `}
       </style>
 
@@ -124,29 +147,42 @@ const Orders = () => {
         <p>No orders found.</p>
       ) : (
         <div className="orders-list">
-          {orders.map((order) => (
-            <div key={order._id} className="order-card">
-              <div className="order-header">
-                <h3>Order ID: {order._id}</h3>
-                <p><strong>₹{order.totalPrice.toFixed(2)}</strong></p>
+          {orders.map((order) => {
+            const status = order.status || "Pending"; // ✅ Ensure status is always defined
+            return (
+              <div key={order._id} className="order-card">
+                <div className="order-header">
+                  <h3>Order ID: {order._id}</h3>
+                  <p><strong>₹{order.totalPrice.toFixed(2)}</strong></p>
+                </div>
+                
+                {/* ✅ Order Status */}
+                <p>
+                  <strong>Status:</strong> 
+                  <span className={`status status-${status.toLowerCase()}`}>
+                    {status}
+                  </span>
+                </p>
+
+                <div className="order-details">
+                  <p><strong>Payment:</strong> {order.paymentMethod}</p>
+                  <p><strong>Delivery Address:</strong> {order.address}</p>
+                  <p><strong>Contact:</strong> {order.phone}</p>
+                </div>
+
+                <div className="order-items">
+                  <h4>Items Ordered:</h4>
+                  {order.items.map((item, index) => (
+                    <div key={index} className="order-item">
+                      <span>{item.name}</span>
+                      <span>Qty: {item.quantity}</span>
+                      <span>₹{item.price.toFixed(2)}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
-              <div className="order-details">
-                <p><strong>Payment:</strong> {order.paymentMethod}</p>
-                <p><strong>Delivery Address:</strong> {order.address}</p>
-                <p><strong>Contact:</strong> {order.phone}</p>
-              </div>
-              <div className="order-items">
-                <h4>Items Ordered:</h4>
-                {order.items.map((item, index) => (
-                  <div key={index} className="order-item">
-                    <span>{item.name}</span>
-                    <span>Qty: {item.quantity}</span>
-                    <span>₹{item.price.toFixed(2)}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
     </div>

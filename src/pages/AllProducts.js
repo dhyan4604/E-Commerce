@@ -9,24 +9,35 @@ import data from '../data/productsData';
 
 const AllProducts = () => {
     useDocTitle('All Products');
+
     const [products, setProducts] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchProducts = async () => {
             try {
                 const response = await fetch("http://localhost:5000/api/products");
+                if (!response.ok) throw new Error("Failed to fetch products");
+
                 const apiData = await response.json();
-                
-                // ✅ Ensure the image URL is correct
+
+                // ✅ Ensure Image URL is Formatted Correctly
                 const formattedApiData = apiData.map(product => ({
                     ...product,
-                    imageUrl: product.imageUrls[0] // Fix if imageUrls is an array
+                    imageUrl: product.imageUrls && product.imageUrls.length > 0 
+                        ? (product.imageUrls[0].startsWith("/uploads") 
+                            ? `http://localhost:5000${product.imageUrls[0]}` 
+                            : product.imageUrls[0]) 
+                        : '/placeholder.jpg' // Default image for missing images
                 }));
 
+                // ✅ Combine Static & Dynamic Products
                 setProducts([...data, ...formattedApiData]);
             } catch (error) {
                 console.error("Error fetching products:", error);
                 setProducts([...data]); // Load local data if API fails
+            } finally {
+                setLoading(false);
             }
         };
 
@@ -40,7 +51,9 @@ const AllProducts = () => {
                 <FilterBar />
 
                 <div className="container">
-                    {products.length > 0 ? (
+                    {loading ? (
+                        <h2>Loading Products...</h2>
+                    ) : products.length > 0 ? (
                         <div className="wrapper products_wrapper">
                             {products.map((item) => (
                                 <ProductCard key={item._id || item.id} {...item} />

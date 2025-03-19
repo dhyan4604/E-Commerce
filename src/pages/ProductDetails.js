@@ -19,43 +19,54 @@ const ProductDetails = () => {
     const { productId } = useParams();
 
     const [product, setProduct] = useState(null);
-    const [previewImg, setPreviewImg] = useState("");
+    const [previewImg, setPreviewImg] = useState('');
 
     useEffect(() => {
         const fetchProduct = async () => {
-            try {
-                const response = await fetch(`http://localhost:5000/api/products/${productId}`);
-                if (!response.ok) throw new Error("Failed to fetch product");
-
-                const data = await response.json();
-                console.log("Fetched Product:", data); // Debugging API response
-                
-                // ✅ Set the product & preview image
-                setProduct(data);
-                setPreviewImg(data.imageUrls?.[0] || "/placeholder.jpg");
-            } catch (error) {
-                console.error("Error fetching product:", error);
-                
-                // ✅ Fallback to static data if API fails
-                const fallbackProduct = productsData.find(item => item.id === parseInt(productId));
-                if (fallbackProduct) {
-                    setProduct(fallbackProduct);
-                    setPreviewImg(fallbackProduct.images?.[0] || "/placeholder.jpg");
+            if (!isNaN(productId)) {
+                // 🔹 Check if productId is a number → Static Product (Local Data)
+                const localProduct = productsData.find(item => item.id === parseInt(productId));
+                if (localProduct) {
+                    setProduct(localProduct);
+                    setPreviewImg(localProduct.images?.[0] || '/placeholder.jpg');
+                    return;
                 }
             }
+    
+            // 🔹 Fetch Dynamic Product from API
+            try {
+                const response = await fetch(`http://localhost:5000/api/products/${productId}`);
+                if (!response.ok) throw new Error('Failed to fetch product');
+    
+                const data = await response.json();
+                console.log('Fetched Product:', data); // Debugging API response
+    
+                // 🔹 Ensure Correct Image URL
+                const formattedImages = data.imageUrls?.length
+                    ? data.imageUrls.map(img => 
+                        img.startsWith('/uploads') ? `http://localhost:5000${img}` : img
+                    )
+                    : [];
+    
+                // 🔹 Set product & preview image
+                setProduct({ ...data, formattedImages });
+                setPreviewImg(formattedImages[0] || '/placeholder.jpg');
+            } catch (error) {
+                console.error('Error fetching product:', error);
+            }
         };
-
+    
         fetchProduct();
-        handleActive(0);
-    }, [productId, handleActive]);
+    }, [productId]); // ✅ Removed handleActive(0) to prevent infinite loop
+    
 
     if (!product) return <h2>Loading product details...</h2>;
 
     // Destructure product details
-    const { imageUrls, images, title, info, category, finalPrice, originalPrice, ratings, rateCount } = product;
+    const { title, info, category, finalPrice, originalPrice, ratings, rateCount, formattedImages, images } = product;
 
-    // ✅ Use dynamic image if available, otherwise fallback to static
-    const productImages = imageUrls?.length ? imageUrls : images || [];
+    // ✅ Use dynamic images if available, otherwise fallback to static images
+    const productImages = formattedImages?.length ? formattedImages : images || [];
     const newPrice = displayMoney(finalPrice);
     const oldPrice = displayMoney(originalPrice);
     const savedPrice = displayMoney(originalPrice - finalPrice);

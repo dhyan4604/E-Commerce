@@ -3,7 +3,6 @@ import { NavLink } from "react-router-dom";
 import {
   BsHouseDoor,
   BsPeople,
-  BsBag,
   BsCart,
   BsClipboard,
   BsBox,
@@ -43,12 +42,7 @@ const Header = () => {
         >
           <BsPeople className="icon" /> Users
         </NavLink>
-        <NavLink
-          to="/brandlist"
-          className={({ isActive }) => (isActive ? "active-link" : "link")}
-        >
-          <BsBag className="icon" /> Brandlist
-        </NavLink>
+       
         <NavLink
           to="/orders"
           className={({ isActive }) => (isActive ? "active-link" : "link")}

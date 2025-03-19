@@ -1,25 +1,38 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const navigate = useNavigate(); // Create navigate function
+  const navigate = useNavigate();
 
-  // Predefined admin credentials
-  const adminEmail = "admin@audioloom.com";
-  const adminPassword = "4604";
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    if (email === adminEmail && password === adminPassword) {
-      localStorage.setItem("authToken", "fake-jwt-token"); // Simulating authentication
+
+    try {
+      const response = await fetch("http://localhost:5000/api/adminlogin", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Login failed");
+      }
+
+      // ✅ Store JWT Token & Role
+      localStorage.setItem("authToken", data.token);
+      localStorage.setItem("userRole", data.userRole);
+      
       alert("Login successful!");
-      navigate("/dashboard"); // Redirect to dashboard after login
-    } else {
-      setError("Invalid email or password.");
+      navigate("/dashboard");
+    } catch (error) {
+      setError(error.message);
     }
   };
 
@@ -36,6 +49,7 @@ const Login = () => {
               placeholder="Enter your email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              required
             />
           </div>
           <div className="form-group">
@@ -45,15 +59,12 @@ const Login = () => {
               placeholder="Enter your password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              required
             />
           </div>
-          <button type="submit" className="login-btn">
-            Login
-          </button>
+          <button type="submit" className="login-btn">Login</button>
         </form>
-       
       </div>
-
       <style>
   {`
     /* Modern & Animated Login Page */
@@ -165,7 +176,6 @@ const Login = () => {
     }
   `}
 </style>
-
     </div>
   );
 };
