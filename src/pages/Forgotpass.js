@@ -1,65 +1,97 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom"; // Import the useNavigate hook
 
-const Login = () => {
+const ForgotPassword = () => {
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [step, setStep] = useState(1);
+  const [otp, setOtp] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [message, setMessage] = useState("");
   const [error, setError] = useState("");
-  const navigate = useNavigate(); // Create the navigate function
 
-  const handleSubmit = async (e) => {
+  const handleEmailSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:5000/api/login", { email, password });
-      localStorage.setItem("authToken", response.data.token); // Save the JWT token
-      alert("Login successful!");
-      navigate("/"); // Redirect to home page after successful login (change the path as needed)
+      const res = await axios.post("http://localhost:5000/api/forgot-password", { email });
+      setMessage(res.data.message);
+      setStep(2);
     } catch (err) {
-      setError("Login failed. Please try again.");
+      setError(err.response?.data?.error || "Something went wrong");
+    }
+  };
+
+  const handleOtpSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await axios.post("http://localhost:5000/api/reset-password", {
+        email,
+        otp,
+        newPassword,
+      });
+      setMessage(res.data.message);
+      setStep(3);
+    } catch (err) {
+      setError(err.response?.data?.error || "Invalid OTP or error occurred");
     }
   };
 
   return (
     <div className="login-page">
       <div className="login-form">
-        <h2>Login</h2>
+        <h2>Forgot Password</h2>
+        {message && <p style={{ color: 'lime' }}>{message}</p>}
         {error && <p style={{ color: 'red' }}>{error}</p>}
-        <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label>Email</label>
-            <input
-              type="email"
-              placeholder="Enter your email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
+
+        {step === 1 && (
+          <form onSubmit={handleEmailSubmit}>
+            <div className="form-group">
+              <label>Email</label>
+              <input
+                type="email"
+                value={email}
+                placeholder="Enter your registered email"
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+            </div>
+            <button type="submit" className="login-btn">Send OTP</button>
+          </form>
+        )}
+
+        {step === 2 && (
+          <form onSubmit={handleOtpSubmit}>
+            <div className="form-group">
+              <label>Enter OTP</label>
+              <input
+                type="text"
+                value={otp}
+                placeholder="6-digit code"
+                onChange={(e) => setOtp(e.target.value)}
+                required
+              />
+            </div>
+            <div className="form-group">
+              <label>New Password</label>
+              <input
+                type="password"
+                value={newPassword}
+                placeholder="Enter new password"
+                onChange={(e) => setNewPassword(e.target.value)}
+                required
+              />
+            </div>
+            <button type="submit" className="login-btn">Reset Password</button>
+          </form>
+        )}
+
+        {step === 3 && (
+          <div>
+            <p>Password reset successful! You can now <a href="/login">login</a>.</p>
           </div>
-          <div className="form-group">
-            <label>Password</label>
-            <input
-              type="password"
-              placeholder="Enter your password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </div>
-          <button type="submit" className="login-btn">
-            Login
-          </button>
-        </form>
-        <div className="signup-link">
-          <p>
-            Don't have an account? <a href="/signup">Sign up</a>
-          </p>
-        </div>
-        <div className="signup-link">
-          <p>
-            Forgot Password? <a href="/forgot">Click Here</a>
-          </p>
-        </div>
+        )}
       </div>
 
+      {/* Reuse login page styles */}
       <style>
   {`
     /* Modern & Animated Login Page */
@@ -171,9 +203,8 @@ const Login = () => {
     }
   `}
 </style>
-
     </div>
   );
 };
 
-export default Login;
+export default ForgotPassword;

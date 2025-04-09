@@ -13,6 +13,7 @@ import Profile from '../pages/Profile';
 import OrderConfirmation from '../pages/Orderconfirmation';
 import AdminRoutes from './AdminRoutes';
 import Order from '../pages/Order'; 
+import ForgotPassword from '../pages/Forgotpass';
 
 const RouterRoutes = () => {
     useScrollRestore();
@@ -30,6 +31,7 @@ const RouterRoutes = () => {
             <Route path="/product-details/:productId" element={<ProductDetails />} />
             <Route path="/checkout" element={<Checkout />} />
             <Route path="/order-confirmation" element={<OrderConfirmation />} />
+            <Route path="/forgot" element={<ForgotPassword />} />
 
             {/* Admin routes */}
             <Route path="/admin/*" element={<AdminRoutes />} />
