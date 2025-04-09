@@ -26,7 +26,7 @@ const Orders = () => {
     };
 
     fetchOrders();
-  }, [authToken]); // ✅ Automatically re-fetch when `authToken` changes
+  }, [authToken]);
 
   return (
     <div className="orders-container">
@@ -113,6 +113,7 @@ const Orders = () => {
             border-radius: 5px;
             font-weight: bold;
             text-transform: capitalize;
+            margin-top: 5px;
           }
 
           .status-pending {
@@ -148,21 +149,16 @@ const Orders = () => {
       ) : (
         <div className="orders-list">
           {orders.map((order) => {
-            const status = order.status || "Pending"; // ✅ Ensure status is always defined
+            const status = order.status || "Pending";
             return (
               <div key={order._id} className="order-card">
                 <div className="order-header">
                   <h3>Order ID: {order._id}</h3>
-                  <p><strong>₹{order.totalPrice.toFixed(2)}</strong></p>
+                  <div style={{ textAlign: "right" }}>
+                    <p><strong>₹{order.totalPrice.toFixed(2)}</strong></p>
+                    <span className={`status status-${status.toLowerCase()}`}>{status}</span>
+                  </div>
                 </div>
-                
-                {/* ✅ Order Status */}
-                <p>
-                  <strong>Status:</strong> 
-                  <span className={`status status-${status.toLowerCase()}`}>
-                    {status}
-                  </span>
-                </p>
 
                 <div className="order-details">
                   <p><strong>Payment:</strong> {order.paymentMethod}</p>

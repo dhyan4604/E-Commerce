@@ -20,52 +20,55 @@ const ProductDetails = () => {
 
     const [product, setProduct] = useState(null);
     const [previewImg, setPreviewImg] = useState('');
+    const [productCategory, setProductCategory] = useState(''); // <-- NEW STATE
 
     useEffect(() => {
         const fetchProduct = async () => {
             if (!isNaN(productId)) {
-                // 🔹 Check if productId is a number → Static Product (Local Data)
                 const localProduct = productsData.find(item => item.id === parseInt(productId));
                 if (localProduct) {
                     setProduct(localProduct);
                     setPreviewImg(localProduct.images?.[0] || '/placeholder.jpg');
+                    setProductCategory(localProduct.category); // <-- Set category from local
                     return;
                 }
             }
-    
-            // 🔹 Fetch Dynamic Product from API
+
             try {
                 const response = await fetch(`http://localhost:5000/api/products/${productId}`);
                 if (!response.ok) throw new Error('Failed to fetch product');
-    
+
                 const data = await response.json();
-                console.log('Fetched Product:', data); // Debugging API response
-    
-                // 🔹 Ensure Correct Image URL
+
                 const formattedImages = data.imageUrls?.length
-                    ? data.imageUrls.map(img => 
+                    ? data.imageUrls.map(img =>
                         img.startsWith('/uploads') ? `http://localhost:5000${img}` : img
                     )
                     : [];
-    
-                // 🔹 Set product & preview image
+
                 setProduct({ ...data, formattedImages });
                 setPreviewImg(formattedImages[0] || '/placeholder.jpg');
+
+                // 🔹 Try to match category with static data if not provided
+                if (data.category) {
+                    setProductCategory(data.category);
+                } else {
+                    const match = productsData.find(p => p.title === data.title);
+                    setProductCategory(match?.category || '');
+                }
+
             } catch (error) {
                 console.error('Error fetching product:', error);
             }
         };
-    
+
         fetchProduct();
-    }, [productId]); // ✅ Removed handleActive(0) to prevent infinite loop
-    
+    }, [productId]);
 
     if (!product) return <h2>Loading product details...</h2>;
 
-    // Destructure product details
     const { title, info, category, finalPrice, originalPrice, ratings, rateCount, formattedImages, images } = product;
 
-    // ✅ Use dynamic images if available, otherwise fallback to static images
     const productImages = formattedImages?.length ? formattedImages : images || [];
     const newPrice = displayMoney(finalPrice);
     const oldPrice = displayMoney(originalPrice);
@@ -155,10 +158,11 @@ const ProductDetails = () => {
 
             <ProductSummary {...product} />
 
+            {/* ✅ Related Products based on static category */}
             <section id="related_products" className="section">
                 <div className="container">
                     <SectionsHead heading="Related Products" />
-                    <RelatedSlider category={category} />
+                    <RelatedSlider category={productCategory} />
                 </div>
             </section>
 

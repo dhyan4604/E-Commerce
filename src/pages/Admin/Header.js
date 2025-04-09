@@ -116,15 +116,26 @@ const Header = () => {
       transition: background-color 0.3s, color 0.3s;
     }
 
-    .link:hover {
-      background-color: #ff4b2b;
-      color: white;
-    }
+    .link {
+  color: white;
+  font-size: 14px;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+  position: relative;
+}
 
-    .active-link {
-      background-color: #ff4b2b;
-      color: white;
-    }
+.link:hover {
+  background-color: rgba(255, 75, 43, 0.15);
+  color: #ff4b2b;
+}
+
+
+
 
     .icon {
       font-size: 18px; /* Adjusted icon size */

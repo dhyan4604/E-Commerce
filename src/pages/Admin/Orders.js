@@ -31,9 +31,29 @@ const Orders = () => {
     fetchOrders();
   }, [authToken]);
 
-  // ✅ Toggle Order Details
   const toggleOrderDetails = (orderId) => {
     setExpandedOrder(expandedOrder === orderId ? null : orderId);
+  };
+
+  const handleStatusChange = async (orderId, newStatus) => {
+    try {
+      await axios.put(
+        `http://localhost:5000/api/update-status/${orderId}`,
+        { status: newStatus },
+        {
+          headers: { Authorization: `Bearer ${authToken}` },
+        }
+      );
+
+      setOrders((prevOrders) =>
+        prevOrders.map((order) =>
+          order._id === orderId ? { ...order, status: newStatus } : order
+        )
+      );
+    } catch (err) {
+      console.error("Failed to update status:", err);
+      alert("Failed to update order status.");
+    }
   };
 
   return (
@@ -94,7 +114,6 @@ const Orders = () => {
             background: rgba(255, 255, 255, 0.15);
           }
 
-          /* ✅ Product Name Styling */
           .product-name {
             color: white;
             cursor: pointer;
@@ -119,29 +138,34 @@ const Orders = () => {
           }
 
           .status {
-            padding: 5px 10px;
-            border-radius: 5px;
+            padding: 6px 12px;
+            border-radius: 6px;
             font-weight: bold;
+            border: none;
+            outline: none;
+            color: white;
           }
 
           .status-pending {
-            background: orange;
+            background-color: orange;
             color: black;
           }
 
           .status-shipped {
-            background: blue;
-            color: white;
+            background-color: #1e88e5;
           }
 
           .status-delivered {
-            background: green;
-            color: white;
+            background-color: #2e7d32;
           }
 
           .status-cancelled {
-            background: red;
-            color: white;
+            background-color: #c62828;
+          }
+
+          select.status {
+            font-size: 14px;
+            cursor: pointer;
           }
 
           .loading, .no-orders, .error-message {
@@ -202,46 +226,49 @@ const Orders = () => {
                 </tr>
               </thead>
               <tbody>
-                {orders.map((order) => {
-                  return (
-                    <React.Fragment key={order._id}>
-                      <tr>
-                        <td>
-                          {/* ✅ Click to Expand Product Details */}
-                          <span className="product-name" onClick={() => toggleOrderDetails(order._id)}>
-                            {order.items.length > 1
-                              ? `${order.items[0].name} +${order.items.length - 1} more`
-                              : order.items[0].name}
-                          </span>
-                        </td>
-                        <td>{order.userId?.name || "Guest"}</td>
-                        <td>₹{order.totalPrice.toFixed(2)}</td>
-                        <td>{new Date(order.createdAt).toLocaleDateString()}</td>
-                        <td>
-                          <span className={`status status-${order.status ? order.status.toLowerCase() : "pending"}`}>
-                            {order.status || "Pending"}
-                          </span>
+                {orders.map((order) => (
+                  <React.Fragment key={order._id}>
+                    <tr>
+                      <td>
+                        <span className="product-name" onClick={() => toggleOrderDetails(order._id)}>
+                          {order.items.length > 1
+                            ? `${order.items[0].name} +${order.items.length - 1} more`
+                            : order.items[0].name}
+                        </span>
+                      </td>
+                      <td>{order.userId?.name || "Guest"}</td>
+                      <td>₹{order.totalPrice.toFixed(2)}</td>
+                      <td>{new Date(order.createdAt).toLocaleDateString()}</td>
+                      <td>
+                        <select
+                          value={order.status}
+                          onChange={(e) => handleStatusChange(order._id, e.target.value)}
+                          className={`status status-${(order.status || "pending").toLowerCase()}`}
+                        >
+                          <option value="Pending">Pending</option>
+                          <option value="Shipped">Shipped</option>
+                          <option value="Delivered">Delivered</option>
+                          <option value="Cancelled">Cancelled</option>
+                        </select>
+                      </td>
+                    </tr>
+
+                    {expandedOrder === order._id && (
+                      <tr className="order-details expanded">
+                        <td colSpan="5">
+                          <h4>Products in Order:</h4>
+                          <ul>
+                            {order.items.map((item, index) => (
+                              <li key={index}>
+                                {item.name} (x{item.quantity}) - ₹{item.price.toFixed(2)}
+                              </li>
+                            ))}
+                          </ul>
                         </td>
                       </tr>
-
-                      {/* ✅ Expanded Product Details */}
-                      {expandedOrder === order._id && (
-                        <tr className="order-details expanded">
-                          <td colSpan="5">
-                            <h4>Products in Order:</h4>
-                            <ul>
-                              {order.items.map((item, index) => (
-                                <li key={index}>
-                                  {item.name} (x{item.quantity}) - ₹{item.price.toFixed(2)}
-                                </li>
-                              ))}
-                            </ul>
-                          </td>
-                        </tr>
-                      )}
-                    </React.Fragment>
-                  );
-                })}
+                    )}
+                  </React.Fragment>
+                ))}
               </tbody>
             </table>
           </div>

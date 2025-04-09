@@ -26,7 +26,7 @@ const Login = () => {
       }
 
       // ✅ Store JWT Token & Role
-      localStorage.setItem("authToken", data.token);
+      localStorage.setItem("adminToken", data.token);
       localStorage.setItem("userRole", data.userRole);
       
       alert("Login successful!");

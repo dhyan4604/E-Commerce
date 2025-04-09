@@ -55,19 +55,21 @@ const Checkout = () => {
 
   const handlePlaceOrder = async (e) => {
     e.preventDefault();
-
+  
     if (cartItems.length === 0) {
       alert("No items in cart!");
       return;
     }
-
+  
     const token = localStorage.getItem("authToken");
     if (!token) {
       alert("You must be logged in to place an order.");
       return;
     }
-
+  
+    // Creating the correct orderDetails
     const orderDetails = {
+      orderId: Math.floor(Math.random() * 1000000), // Generate a random Order ID
       items: cartItems.map((item) => ({
         id: item.id,
         name: item.title,
@@ -79,7 +81,7 @@ const Checkout = () => {
       phone: formData.phone,
       paymentMethod: formData.paymentMethod,
     };
-
+  
     try {
       const response = await axios.post(
         "http://localhost:5000/api/orders",
@@ -89,23 +91,17 @@ const Checkout = () => {
           validateStatus: (status) => status < 400, // Treat any status < 400 as success
         }
       );
-
-      // On successful order, clear the cart and navigate without showing a popup
+  
       if (response.status === 200 || response.status === 201) {
-        clearCart(); // Reset the cart after successful order
-        console.log("Navigating to order confirmation...");
-        navigate("/order-confirmation", { state: response.data }); // Navigate to order confirmation page
+        clearCart(); // Reset cart after order
+        navigate("/order-confirmation", { state: { orderDetails } }); // Pass correct orderDetails
       }
-
     } catch (error) {
-      console.error("Error placing order:", error.response || error.message); // Log detailed error info
-
-      // Show error message only when checkout fails
-      if (error.response) {
-        alert("Failed to place order. Please try again.");
-      }
+      console.error("Error placing order:", error.response || error.message);
+      alert("Failed to place order. Please try again.");
     }
   };
+  
 
   return (
     <div className="checkout-wrapper">
