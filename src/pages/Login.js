@@ -12,7 +12,7 @@ const Login = () => {
     e.preventDefault();
     try {
       const response = await axios.post("http://localhost:5000/api/login", { email, password });
-      localStorage.setItem("userToken", response.data.token); // Save the JWT token
+      localStorage.setItem("authToken", response.data.token); // Save the JWT token
       alert("Login successful!");
       navigate("/"); // Redirect to home page after successful login (change the path as needed)
     } catch (err) {
