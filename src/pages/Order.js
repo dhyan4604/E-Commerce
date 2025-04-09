@@ -28,6 +28,30 @@ const Orders = () => {
     fetchOrders();
   }, [authToken]);
 
+  const handleCancelOrder = async (orderId) => {
+    try {
+      const confirm = window.confirm("Are you sure you want to cancel this order?");
+      if (!confirm) return;
+
+      await axios.put(
+        `http://localhost:5000/api/orders/${orderId}/cancel`,
+        {},
+        {
+          headers: { Authorization: `Bearer ${authToken}` },
+        }
+      );
+
+      // Update status locally
+      setOrders((prevOrders) =>
+        prevOrders.map((order) =>
+          order._id === orderId ? { ...order, status: "cancelled" } : order
+        )
+      );
+    } catch (err) {
+      alert("Failed to cancel the order. Try again.");
+    }
+  };
+
   return (
     <div className="orders-container">
       <style>
@@ -106,7 +130,22 @@ const Orders = () => {
             border-bottom: none;
           }
 
-          /* Status Styling */
+          .cancel-button {
+            margin-top: 15px;
+            padding: 10px 15px;
+            background-color: #ff4b2b;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+          }
+
+          .cancel-button:hover {
+            background-color: #e84326;
+          }
+
           .status {
             display: inline-block;
             padding: 6px 10px;
@@ -149,7 +188,7 @@ const Orders = () => {
       ) : (
         <div className="orders-list">
           {orders.map((order) => {
-            const status = order.status || "Pending";
+            const status = order.status || "pending";
             return (
               <div key={order._id} className="order-card">
                 <div className="order-header">
@@ -176,6 +215,16 @@ const Orders = () => {
                     </div>
                   ))}
                 </div>
+
+                {/* Cancel Button */}
+                {status.toLowerCase() !== "cancelled" && status.toLowerCase() !== "delivered" && (
+                  <button
+                    className="cancel-button"
+                    onClick={() => handleCancelOrder(order._id)}
+                  >
+                    Cancel Order
+                  </button>
+                )}
               </div>
             );
           })}
